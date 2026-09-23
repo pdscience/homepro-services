@@ -1,0 +1,47 @@
+---
+---
+<section class="section" id="results">
+  <div class="section-head reveal">
+    <div><div class="kicker" data-i18n="s2_kicker">02 / Live Results</div><h2 data-i18n="s2_h1">The numbers<br>speak.</h2></div>
+    <p data-i18n="s2_desc">Real-time performance metrics — jobs completed, satisfaction rates, and growth trends updated live.</p>
+  </div>
+  <div class="chart-wrap">
+    <div class="chart-card reveal">
+      <div class="chart-top"><div><div class="metric">+247.3%</div><div class="legend"><b data-i18n="legend1">Jobs completed</b> &middot; <span data-i18n="legend1_sub">last 30 days</span></div></div><div class="delta">&uarr; 41.2%</div></div>
+      <svg class="chart draw-chart" viewBox="0 0 800 270" preserveAspectRatio="none">
+        <defs><linearGradient id="fade" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="#e3062f" stop-opacity=".24"/><stop offset="1" stop-color="#e3062f" stop-opacity="0"/></linearGradient></defs>
+        <g>
+          <line class="axis" x1="0" y1="45" x2="800" y2="45"/><line class="axis" x1="0" y1="115" x2="800" y2="115"/><line class="axis" x1="0" y1="185" x2="800" y2="185"/><line class="axis" x1="0" y1="255" x2="800" y2="255"/>
+        </g>
+        <path class="area" d="M0 245 L80 224 L155 236 L225 175 L300 190 L375 128 L445 155 L515 96 L585 112 L660 65 L730 82 L800 32 L800 270 L0 270 Z"/>
+        <path class="line" d="M0 245 L80 224 L155 236 L225 175 L300 190 L375 128 L445 155 L515 96 L585 112 L660 65 L730 82 L800 32"/>
+      </svg>
+    </div>
+    <div class="chart-card reveal">
+      <div class="chart-top"><div><div class="metric">4.96x</div><div class="legend"><b data-i18n="legend2">Customer rating</b> &middot; <span data-i18n="legend2_sub">avg score</span></div></div><div class="delta">&uarr; 0.12</div></div>
+      <svg class="chart draw-chart" viewBox="0 0 800 270" preserveAspectRatio="none">
+        <g><line class="axis" x1="0" y1="45" x2="800" y2="45"/><line class="axis" x1="0" y1="115" x2="800" y2="115"/><line class="axis" x1="0" y1="185" x2="800" y2="185"/><line class="axis" x1="0" y1="255" x2="800" y2="255"/></g>
+        <path class="line" d="M0 190 L80 205 L155 166 L225 175 L300 120 L375 145 L445 105 L515 120 L585 82 L660 96 L730 55 L800 65"/>
+      </svg>
+    </div>
+  </div>
+</section>
+
+<style>
+  .chart-wrap { display: grid; grid-template-columns: 1.25fr .75fr; gap: 18px }
+  .chart-card { padding: 26px; border: 1px solid var(--line); border-radius: 24px; background: #080a0d }
+  .chart-top { display: flex; justify-content: space-between; align-items: start; margin-bottom: 22px }
+  .metric { font-family: "Space Grotesk"; font-size: 38px }
+  .delta { font-size: 11px; color: #83f0a5 }
+  .chart { width: 100%; height: 270px }
+  .chart :global(path.line) { fill: none; stroke: var(--red2); stroke-width: 3; stroke-linecap: round; stroke-linejoin: round;
+    stroke-dasharray: 1000; stroke-dashoffset: 1000 }
+  .chart :global(.area) { fill: url(#fade) }
+  .axis { stroke: rgba(255,255,255,.08); stroke-width: 1 }
+  .legend { display: flex; gap: 20px; color: #7f8690; font-size: 10px; text-transform: uppercase; letter-spacing: .12em }
+  .legend b { color: #fff }
+
+  @media (max-width: 850px) {
+    .chart-wrap { grid-template-columns: 1fr }
+  }
+</style>

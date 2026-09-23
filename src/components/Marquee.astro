@@ -1,0 +1,16 @@
+---
+---
+<div class="marquee">
+  <div class="track" id="marqueeTrack">
+    <span><b>HOMES</b> TRUSTED</span><span>LICENSED</span><span><b>INSURED</b> PROS</span><span>GUARANTEED</span><span>PREMIUM</span><span><b>SATISFIED</b> CLIENTS</span>
+    <span><b>HOMES</b> TRUSTED</span><span>LICENSED</span><span><b>INSURED</b> PROS</span><span>GUARANTEED</span><span>PREMIUM</span><span><b>SATISFIED</b> CLIENTS</span>
+  </div>
+</div>
+
+<style>
+  .marquee { border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); overflow: hidden; padding: 23px 0 }
+  .track { display: flex; width: max-content; animation: marquee 28s linear infinite }
+  .track :global(span) { font-family: "Space Grotesk"; font-size: 18px; letter-spacing: .04em; padding: 0 28px; color: #777e87 }
+  .track :global(span b) { color: #fff }
+  @keyframes marquee { to { transform: translateX(-50%) } }
+</style>

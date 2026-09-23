@@ -1,0 +1,26 @@
+---
+---
+<section class="section" id="faq">
+  <div class="section-head reveal">
+    <div><div class="kicker" data-i18n="faq_kicker">05 / FAQ</div><h2 data-i18n="faq_h1">No question<br>left unanswered.</h2></div>
+    <p data-i18n="faq_desc">Clear answers, direct communication and service you can count on.</p>
+  </div>
+  <div class="faq reveal">
+    <div class="faq-item"><button class="faq-q"><span data-i18n="faq1_q">What services do you offer?</span><span class="plus">+</span></button><div class="faq-a"><div class="faq-a-inner" data-i18n="faq1_a">We provide plumbing, electrical, HVAC, painting, landscaping, and deep cleaning services for residential properties across the United States. All work is performed by licensed and insured professionals.</div></div></div>
+    <div class="faq-item"><button class="faq-q"><span data-i18n="faq2_q">How do I schedule a service?</span><span class="plus">+</span></button><div class="faq-a"><div class="faq-a-inner" data-i18n="faq2_a">Fill out the contact form below or reach us directly via WhatsApp. We'll confirm your appointment, assign a specialist, and send you a confirmation with all the details.</div></div></div>
+    <div class="faq-item"><button class="faq-q"><span data-i18n="faq3_q">Are your technicians licensed and insured?</span><span class="plus">+</span></button><div class="faq-a"><div class="faq-a-inner" data-i18n="faq3_a">Yes. Every technician is fully licensed, background-checked, and insured. We carry comprehensive liability coverage for your peace of mind.</div></div></div>
+    <div class="faq-item"><button class="faq-q"><span data-i18n="faq4_q">Do you offer emergency services?</span><span class="plus">+</span></button><div class="faq-a"><div class="faq-a-inner" data-i18n="faq4_a">Absolutely. We offer 24/7 emergency plumbing, electrical, and HVAC services. Call us anytime and a technician will be dispatched promptly.</div></div></div>
+    <div class="faq-item"><button class="faq-q"><span data-i18n="faq5_q">What areas do you serve?</span><span class="plus">+</span></button><div class="faq-a"><div class="faq-a-inner" data-i18n="faq5_a">We serve residential clients across all 50 states, with particularly strong coverage in Texas, Florida, California, New York, and Illinois. Contact us to confirm availability in your area.</div></div></div>
+  </div>
+</section>
+
+<style>
+  .faq { border-top: 1px solid var(--line) }
+  .faq-item { border-bottom: 1px solid var(--line) }
+  .faq-q { width: 100%; background: none; border: 0; color: #fff; padding: 25px 0; text-align: left; display: flex; justify-content: space-between; gap: 20px; cursor: pointer; font-family: "Space Grotesk"; font-size: 19px }
+  .plus { width: 28px; height: 28px; border: 1px solid var(--line); border-radius: 50%; display: grid; place-items: center; transition: .35s var(--ease) }
+  .faq-a { height: 0; overflow: hidden; color: var(--muted); font-size: 13px; line-height: 1.7; max-width: 700px; transition: height .45s var(--ease) }
+  .faq-a-inner { padding: 0 0 24px }
+  .faq-item.open .plus { transform: rotate(45deg); background: #fff; color: #000 }
+  .faq-item.open .faq-a { height: auto }
+</style>

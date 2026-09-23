@@ -1,0 +1,15 @@
+---
+---
+<div class="flag-strip"><div class="flag-stars"></div></div>
+
+<style>
+  .flag-strip { height: 9px; position: fixed; top: 0; left: 0; right: 0; z-index: 200; overflow: hidden;
+    background: repeating-linear-gradient(0deg, #fff 0 3px, #d20b2f 3px 6px) }
+  .flag-strip:after { content: ""; position: absolute; inset: -30px -10% 0;
+    background: repeating-linear-gradient(0deg, rgba(255,255,255,.9) 0 7px, #d20b2f 7px 14px);
+    transform: skewY(-2deg) translateX(-1%); filter: blur(.2px); opacity: .9;
+    animation: flagWave 3.6s ease-in-out infinite }
+  .flag-stars { position: absolute; z-index: 2; left: 0; top: 0; width: 145px; height: 100%; background: #071b55;
+    clip-path: polygon(0 0, 100% 0, 88% 100%, 0 100%); opacity: .95 }
+  @keyframes flagWave { 0%, 100% { transform: skewY(-2deg) translateX(-1%) } 50% { transform: skewY(2deg) translateX(1.5%) } }
+</style>

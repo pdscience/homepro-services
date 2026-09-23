@@ -1,0 +1,39 @@
+---
+---
+<header class="hero" id="top">
+  <div class="hero-media">
+    <img id="heroImage" src="https://images.unsplash.com/photo-1581578731548-c64695cc6952?w=1920&q=80" alt="Premium residential services" loading="eager" />
+  </div>
+  <div class="hero-content">
+    <div class="eyebrow"><i></i> <span data-i18n="hero_eyebrow">Premium residential services</span></div>
+    <h1><span data-i18n="hero_h1_line1">YOUR HOME,</span><br /><em data-i18n="hero_h1_line2">PERFECTED.</em></h1>
+    <p class="hero-copy" data-i18n="hero_copy">Expert craftsmanship delivered with precision — plumbing, electrical, HVAC, painting, landscaping and more. Your home deserves the best.</p>
+    <div class="hero-actions">
+      <a class="btn primary" href="#contact" data-track="hero_cta"><span data-i18n="hero_cta">Get started</span> &uarr;</a>
+      <a class="btn" href="#services" data-i18n="hero_alt">View services</a>
+    </div>
+  </div>
+  <div class="scroll-note" data-i18n="scroll_note">Scroll to explore</div>
+</header>
+
+<style>
+  .hero { min-height: 100svh; position: relative; display: grid; align-items: end; overflow: hidden }
+  .hero-media { position: absolute; inset: 0; background: #050608 }
+  .hero-media img { width: 100%; height: 100%; object-fit: cover; filter: saturate(1.06) contrast(1.08); opacity: .55 }
+  .hero-media:after { content: ""; position: absolute; inset: 0; background:
+    linear-gradient(180deg,rgba(0,0,0,.45),rgba(0,0,0,.06) 42%,rgba(0,0,0,.92) 100%),
+    radial-gradient(70% 50% at 55% 55%,transparent,rgba(0,0,0,.58)) }
+  .hero-content { position: relative; z-index: 2; width: min(var(--max),100%); margin: 0 auto; padding: 0 28px 58px }
+  .eyebrow { display: flex; align-items: center; gap: 9px; color: #c9ccd2; text-transform: uppercase; font-size: 10px; letter-spacing: .18em }
+  .eyebrow i { width: 6px; height: 6px; background: var(--red); border-radius: 50%; box-shadow: 0 0 14px var(--red) }
+  .hero h1 { font-family: "Space Grotesk"; font-size: clamp(62px,10vw,150px); line-height: .82; margin: 18px 0 24px; letter-spacing: -.075em; max-width: 850px }
+  .hero h1 em { font-style: normal; color: transparent; -webkit-text-stroke: 1px rgba(255,255,255,.7) }
+  .hero-copy { max-width: 530px; color: #c4c8cf; font-size: 15px; line-height: 1.65 }
+  .hero-actions { display: flex; gap: 10px; margin-top: 25px }
+  .scroll-note { position: absolute; right: 30px; bottom: 62px; writing-mode: vertical-rl; text-transform: uppercase; letter-spacing: .2em; font-size: 9px; color: #858a92 }
+
+  @media (max-width: 850px) {
+    .hero-content { padding: 0 20px 45px }
+    .scroll-note { display: none }
+  }
+</style>
