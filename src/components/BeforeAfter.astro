@@ -2,33 +2,42 @@
 ---
 <section class="section" id="transformation">
   <div class="section-head reveal">
-    <div><div class="kicker" data-i18n="s4_kicker">04 / Transformation</div><h2 data-i18n="s4_h1">Before.<br>After.</h2></div>
-    <p data-i18n="s4_desc">Drag the slider to compare a generic contractor result with HomePro quality workmanship.</p>
+    <div><div class="kicker" data-i18n="s4_kicker">04 / Service area</div><h2 data-i18n="s4_h1">Serving<br>South Florida.</h2></div>
+    <p data-i18n="s4_desc">Based in Florida City — fast response across Miami-Dade, Broward, Palm Beach and the Keys.</p>
   </div>
-  <div class="compare reveal">
-    <div class="layer after-layer"></div>
-    <div class="layer before-layer"></div>
-    <span class="compare-label before-label" data-i18n="before">BEFORE</span>
-    <span class="compare-label after-label" data-i18n="after">AFTER</span>
-    <input id="compareRange" type="range" min="0" max="100" value="50" aria-label="Compare before and after" />
-    <div class="handle" id="handle"></div>
+  <div class="map-wrap reveal">
+    <div class="map-frame">
+      <iframe
+        title="Service area map — Florida City and South Florida"
+        src="https://maps.google.com/maps?q=Florida%20City%2C%20FL%20Miami-Dade%20Broward%20Palm%20Beach%20Keys&t=&z=9&ie=UTF8&iwloc=&output=embed"
+        loading="lazy"
+        referrerpolicy="no-referrer-when-downgrade"
+        allowfullscreen></iframe>
+    </div>
+    <div class="map-side">
+      <div class="area-list">
+        <div class="area"><b data-i18n="area1_t">Florida City</b><span data-i18n="area1_p">Home base — priority response</span></div>
+        <div class="area"><b data-i18n="area2_t">Miami-Dade</b><span data-i18n="area2_p">Full coverage</span></div>
+        <div class="area"><b data-i18n="area3_t">Broward</b><span data-i18n="area3_p">Full coverage</span></div>
+        <div class="area"><b data-i18n="area4_t">Palm Beach & Keys</b><span data-i18n="area4_p">Scheduled routes</span></div>
+      </div>
+      <a class="btn primary" href="https://www.google.com/maps/place/Florida+City,+Fl%C3%B3rida,+EUA/@25.4405345,-80.4668135,14z/data=!3m1!4b1!4m6!3m5!1s0x88d9e0cb35a8cf39:0xf7bdead0fe918320!8m2!3d25.4478898!4d-80.4792237!16zL20vMHJuZDU!18m1!1e1?entry=ttu" target="_blank" rel="noopener" data-i18n="map_open">Open in Google Maps</a>
+    </div>
   </div>
 </section>
 
 <style>
-  .compare { position: relative; height: 520px; border: 1px solid var(--line); border-radius: 28px; overflow: hidden; background: #111 }
-  .compare .layer { position: absolute; inset: 0; background-size: cover; background-position: center }
-  .after-layer { background-image: linear-gradient(120deg,rgba(227,6,47,.2),transparent),url('https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=1920&q=80') }
-  .before-layer { background-image: linear-gradient(120deg,#1b1d21,#090a0c); width: 50%; overflow: hidden }
-  .compare-label { position: absolute; padding: 8px 11px; border: 1px solid rgba(255,255,255,.2); border-radius: 999px; font-size: 9px; letter-spacing: .18em }
-  .compare-label.before-label { left: 25px; top: 25px }
-  .compare-label.after-label { right: 25px; top: 25px }
-  .compare input { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; cursor: ew-resize; z-index: 5 }
-  .handle { position: absolute; top: 0; bottom: 0; left: 50%; width: 1px; background: #fff; z-index: 4; pointer-events: none }
-  .handle:after { content: "\2194"; position: absolute; left: 50%; top: 50%; transform: translate(-50%,-50%); width: 48px; height: 48px; border-radius: 50%;
-    display: grid; place-items: center; background: #fff; color: #111; font-weight: 700 }
+  .map-wrap { display: grid; grid-template-columns: 1fr; gap: 0; border: 1px solid var(--line); border-radius: 28px; overflow: hidden; background: #080a0d }
+  .map-frame { position: relative; min-height: 520px }
+  .map-frame iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; filter: saturate(1.05) contrast(1.05) }
+  .map-side { padding: 28px; display: flex; flex-direction: column; gap: 18px; justify-content: center }
+  .area-list { display: grid; grid-template-columns: repeat(4,1fr); gap: 10px }
+  .area { border: 1px solid rgba(255,255,255,.1); border-radius: 16px; padding: 13px 16px; background: rgba(255,255,255,.03) }
+  .area b { display: block; font-family: "Space Grotesk"; font-size: 16px }
+  .area span { color: var(--muted); font-size: 12px }
 
   @media (max-width: 850px) {
-    .compare { height: 390px }
+    .map-frame { min-height: 380px }
+    .area-list { grid-template-columns: 1fr 1fr }
   }
 </style>

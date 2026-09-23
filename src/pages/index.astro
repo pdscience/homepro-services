@@ -5,9 +5,11 @@ import CursorEffects from '../components/CursorEffects.astro';
 import Navbar from '../components/Navbar.astro';
 import Hero from '../components/Hero.astro';
 import Services from '../components/Services.astro';
+import Differentials from '../components/Differentials.astro';
 import Results from '../components/Results.astro';
 import Dashboard from '../components/Dashboard.astro';
 import BeforeAfter from '../components/BeforeAfter.astro';
+import Hurricane from '../components/Hurricane.astro';
 import Marquee from '../components/Marquee.astro';
 import FAQ from '../components/FAQ.astro';
 import ContactForm from '../components/ContactForm.astro';
@@ -22,9 +24,11 @@ import Footer from '../components/Footer.astro';
 
   <main>
     <Services />
+    <Differentials />
     <Results />
     <Dashboard />
     <BeforeAfter />
+    <Hurricane />
     <Marquee />
     <FAQ />
     <ContactForm />
@@ -32,6 +36,6 @@ import Footer from '../components/Footer.astro';
 
   <Footer />
 
-  <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/ScrollTrigger.min.js"></script>
+  <script is:inline src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js"></script>
+  <script is:inline src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/ScrollTrigger.min.js"></script>
 </Layout>

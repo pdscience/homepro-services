@@ -2,41 +2,54 @@
 ---
 <section class="section" id="dashboard">
   <div class="section-head reveal">
-    <div><div class="kicker" data-i18n="s3_kicker">03 / Dashboard</div><h2 data-i18n="s3_h1">Service<br>tracker.</h2></div>
-    <p data-i18n="s3_desc">A real-time view of your service operations — response times, completions and customer satisfaction.</p>
+    <div><div class="kicker" data-i18n="s3_kicker">03 / B2B</div><h2 data-i18n="s3_h1">Business<br>opportunities.</h2></div>
+    <p data-i18n="s3_desc">Beyond homes — services for local businesses, contractors and entrepreneurs across South Florida.</p>
   </div>
-  <div class="ads reveal">
-    <div class="ads-head"><span class="ads-dot"></span><b data-i18n="dash_head">Service Dashboard</b><span>&middot;</span><span data-i18n="dash_sub">Performance / All services</span><span style="margin-left:auto">Today, 02:14</span></div>
-    <div class="ads-body">
-      <div class="ads-grid">
-        <div class="ads-kpi"><small data-i18n="kpi1">JOBS COMPLETED</small><strong id="impressions">1,842</strong></div>
-        <div class="ads-kpi"><small data-i18n="kpi2">5-STAR REVIEWS</small><strong id="clicks">947</strong></div>
-        <div class="ads-kpi"><small data-i18n="kpi3">RESPONSE TIME</small><strong id="ctr">24 min</strong></div>
-        <div class="ads-kpi"><small data-i18n="kpi4">SATISFACTION</small><strong id="cpa">98.7%</strong></div>
-      </div>
-      <div class="ads-chart"><div class="live-line"></div></div>
-      <div class="ad-status"><span class="pulse"></span> <span data-i18n="dash_status">Services active</span> &middot; <b data-i18n="dash_teams">6 teams deployed</b> &middot; updates every 2.4s</div>
-    </div>
+  <div class="b2b-strip reveal">
+    <div class="strip-stat"><strong>9.46%</strong><span data-i18n="b2b_note_p">of the local workforce runs its own business</span></div>
+    <div class="strip-div"></div>
+    <div class="strip-txt" data-i18n="b2b_note_t">Florida City's Hispanic community and contractor base drive year-round B2B demand.</div>
+  </div>
+  <div class="grid">
+    <article class="glass tilt reveal"><span class="ghost-num">01</span><span class="top-badge" data-i18n="b2b_badge">B2B</span><span class="card-num" data-i18n="b2b1_num">01 — MARKETING</span><h3 data-i18n="b2b1_h3">Digital marketing<br>that converts.</h3><p data-i18n="b2b1_p">Ads, social and local SEO for small neighborhood businesses.</p><div class="card-line"></div></article>
+    <article class="glass tilt reveal"><span class="ghost-num">02</span><span class="top-badge" data-i18n="b2b_badge">B2B</span><span class="card-num" data-i18n="b2b2_num">02 — ACCOUNTING</span><h3 data-i18n="b2b2_h3">Books<br>in order.</h3><p data-i18n="b2b2_p">Accounting and bookkeeping for contractors and small companies.</p><div class="card-line"></div></article>
+    <article class="glass tilt reveal"><span class="ghost-num">03</span><span class="top-badge" data-i18n="b2b_badge">B2B</span><span class="card-num" data-i18n="b2b3_num">03 — IMMIGRATION LAW</span><h3 data-i18n="b2b3_h3">Legal help<br>in your language.</h3><p data-i18n="b2b3_p">Immigration legal services for our large Hispanic community.</p><div class="card-line"></div></article>
+    <article class="glass tilt reveal"><span class="ghost-num">04</span><span class="top-badge" data-i18n="b2b_badge">B2B</span><span class="card-num" data-i18n="b2b4_num">04 — CONSULTING · 9.46%</span><h3 data-i18n="b2b4_h3">Grow<br>your business.</h3><p data-i18n="b2b4_p">Business consulting for entrepreneurs — 9.46% of the local workforce runs its own business.</p><div class="card-line"></div></article>
+  </div>
+  <div class="b2b-cta reveal">
+    <a class="btn primary" href="#contact" data-track="b2b_cta"><span data-i18n="b2b_cta">Talk to a specialist</span> &uarr;</a>
   </div>
 </section>
 
 <style>
-  .ads { border: 1px solid var(--line); border-radius: 26px; background: #f5f6f8; color: #16181d; overflow: hidden; box-shadow: 0 40px 100px rgba(0,0,0,.28) }
-  .ads-head { padding: 15px 18px; border-bottom: 1px solid #dfe1e6; display: flex; gap: 16px; align-items: center; font-size: 11px }
-  .ads-dot { width: 9px; height: 9px; border-radius: 50%; background: #21c87a; box-shadow: 0 0 0 5px rgba(33,200,122,.1) }
-  .ads-body { padding: 24px }
-  .ads-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 10px }
-  .ads-kpi { background: white; border: 1px solid #e2e4e8; border-radius: 14px; padding: 16px }
-  .ads-kpi small { color: #737983; font-size: 10px }
-  .ads-kpi strong { display: block; font-size: 23px; margin-top: 8px }
-  .ads-chart { height: 150px; margin-top: 12px; border-radius: 14px; background: linear-gradient(#fff,#f8f9fb); border: 1px solid #e2e4e8; position: relative; overflow: hidden }
-  .live-line { position: absolute; left: -10%; right: 0; bottom: 26px; height: 80px; border-top: 3px solid #e3062f; transform: skewY(-9deg); animation: live 2.8s linear infinite }
-  @keyframes live { from { left: -30% } to { left: 110% } }
-  .ad-status { display: flex; gap: 8px; align-items: center; font-size: 10px; color: #4b515a; margin-top: 12px }
-  .pulse { width: 6px; height: 6px; border-radius: 50%; background: #e3062f; animation: pulse 1s infinite }
-  @keyframes pulse { 50% { opacity: .25 } }
+  .b2b-strip { display: flex; align-items: center; gap: 22px; border: 1px solid var(--line); border-radius: 24px; padding: 22px 28px; margin-bottom: 16px;
+    background: linear-gradient(120deg,rgba(227,6,47,.14),rgba(227,6,47,.02) 55%,transparent); overflow: hidden }
+  .strip-stat { display: flex; align-items: baseline; gap: 10px; white-space: nowrap }
+  .strip-stat strong { font-family: "Space Grotesk"; font-size: clamp(38px,4.5vw,56px); letter-spacing: -.04em; color: #fff }
+  .strip-stat span { color: var(--muted); font-size: 12px; max-width: 180px; line-height: 1.5; white-space: normal }
+  .strip-div { width: 1px; align-self: stretch; background: var(--line) }
+  .strip-txt { color: #c4c8cf; font-size: 14px; line-height: 1.65; max-width: 520px }
+  .grid { display: grid; grid-template-columns: repeat(2,1fr); gap: 16px }
+  .glass { position: relative; min-height: 300px; padding: 27px; border: 1px solid rgba(255,255,255,.12); border-radius: 24px;
+    background: linear-gradient(145deg,rgba(255,255,255,.085),rgba(255,255,255,.018));
+    box-shadow: 0 30px 90px rgba(0,0,0,.35), inset 0 1px 0 rgba(255,255,255,.08);
+    backdrop-filter: blur(20px); transform-style: preserve-3d; transition: transform .15s ease, box-shadow .3s ease; overflow: hidden }
+  .glass:before { content: ""; position: absolute; width: 190px; height: 190px; right: -80px; top: -80px; background: var(--red); filter: blur(80px); opacity: .14 }
+  .glass:hover { box-shadow: 0 40px 100px rgba(0,0,0,.5), inset 0 1px 0 rgba(255,255,255,.12) }
+  .ghost-num { position: absolute; right: 12px; top: 2px; font-family: "Space Grotesk"; font-weight: 700; font-size: 96px; line-height: 1;
+    color: transparent; -webkit-text-stroke: 1px rgba(255,255,255,.16); pointer-events: none; user-select: none }
+  .card-num { font-size: 10px; color: #777e88; letter-spacing: .18em }
+  .top-badge { display: inline-block; font-size: 9px; letter-spacing: .18em; color: #fff; background: var(--red); border-radius: 999px; padding: 4px 10px; margin-bottom: 10px; margin-right: 8px }
+  .glass h3 { position: relative; font-family: "Space Grotesk"; font-size: 30px; margin: 60px 0 12px; transform: translateZ(35px) }
+  .glass p { position: relative; color: var(--muted); font-size: 13px; line-height: 1.6; max-width: 340px; transform: translateZ(22px) }
+  .card-line { position: absolute; left: 27px; right: 27px; bottom: 28px; height: 1px; background: linear-gradient(90deg,var(--red),transparent) }
+  .b2b-cta { display: flex; justify-content: center; margin-top: 26px }
 
   @media (max-width: 850px) {
-    .ads-grid { grid-template-columns: repeat(2,1fr) }
+    .grid { grid-template-columns: 1fr }
+    .glass { min-height: 270px }
+    .b2b-strip { flex-direction: column; align-items: start; gap: 14px }
+    .strip-div { width: 100%; height: 1px }
+    .ghost-num { font-size: 72px }
   }
 </style>
