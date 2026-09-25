@@ -2,46 +2,105 @@
 ---
 <section class="section" id="results">
   <div class="section-head reveal">
-    <div><div class="kicker" data-i18n="s2_kicker">02 / Live Results</div><h2 data-i18n="s2_h1">The numbers<br>speak.</h2></div>
-    <p data-i18n="s2_desc">Real-time performance metrics — jobs completed, satisfaction rates, and growth trends updated live.</p>
+    <div><div class="kicker" data-i18n="s2_kicker">02 / Service opportunities</div><h2 data-i18n="s2_h1">The right service<br>for the job.</h2></div>
+    <p data-i18n="s2_desc">Compare demand, competition, ticket size and recurrence across the services South Florida requests most.</p>
   </div>
-  <div class="chart-wrap">
-    <div class="chart-card reveal">
-      <div class="chart-top"><div><div class="metric">+247.3%</div><div class="legend"><b data-i18n="legend1">Jobs completed</b> &middot; <span data-i18n="legend1_sub">last 30 days</span></div></div><div class="delta">&uarr; 41.2%</div></div>
-      <svg class="chart draw-chart" viewBox="0 0 800 270" preserveAspectRatio="none">
-        <defs><linearGradient id="fade" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="#e3062f" stop-opacity=".24"/><stop offset="1" stop-color="#e3062f" stop-opacity="0"/></linearGradient></defs>
-        <g>
-          <line class="axis" x1="0" y1="45" x2="800" y2="45"/><line class="axis" x1="0" y1="115" x2="800" y2="115"/><line class="axis" x1="0" y1="185" x2="800" y2="185"/><line class="axis" x1="0" y1="255" x2="800" y2="255"/>
-        </g>
-        <path class="area" d="M0 245 L80 224 L155 236 L225 175 L300 190 L375 128 L445 155 L515 96 L585 112 L660 65 L730 82 L800 32 L800 270 L0 270 Z"/>
-        <path class="line" d="M0 245 L80 224 L155 236 L225 175 L300 190 L375 128 L445 155 L515 96 L585 112 L660 65 L730 82 L800 32"/>
-      </svg>
-    </div>
-    <div class="chart-card reveal">
-      <div class="chart-top"><div><div class="metric">4.96x</div><div class="legend"><b data-i18n="legend2">Customer rating</b> &middot; <span data-i18n="legend2_sub">avg score</span></div></div><div class="delta">&uarr; 0.12</div></div>
-      <svg class="chart draw-chart" viewBox="0 0 800 270" preserveAspectRatio="none">
-        <g><line class="axis" x1="0" y1="45" x2="800" y2="45"/><line class="axis" x1="0" y1="115" x2="800" y2="115"/><line class="axis" x1="0" y1="185" x2="800" y2="185"/><line class="axis" x1="0" y1="255" x2="800" y2="255"/></g>
-        <path class="line" d="M0 190 L80 205 L155 166 L225 175 L300 120 L375 145 L445 105 L515 120 L585 82 L660 96 L730 55 L800 65"/>
-      </svg>
+  <div class="matrix-shell">
+    <div class="matrix-scroll">
+      <table class="res-matrix">
+        <thead>
+          <tr>
+            <th scope="col" data-i18n="res_niche">Niche</th>
+            <th scope="col" data-i18n="res_demand">Demand</th>
+            <th scope="col" data-i18n="res_competition">Competition</th>
+            <th scope="col" data-i18n="res_ticket">Average ticket</th>
+            <th scope="col" data-i18n="res_recurrence">Recurrence</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th scope="row" data-i18n="res1_t">HVAC/AC</th>
+            <td><div class="demand" data-demand="5"><span class="demand-bars" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span><span class="demand-score">5/5</span></div></td>
+            <td data-i18n="res1_c">Medium</td>
+            <td data-i18n="res1_ticket">High (US$ 200–5K+)</td>
+            <td data-i18n="res1_r">Seasonal maintenance</td>
+          </tr>
+          <tr>
+            <th scope="row" data-i18n="res2_t">Plumbing</th>
+            <td><div class="demand" data-demand="5"><span class="demand-bars" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span><span class="demand-score">5/5</span></div></td>
+            <td data-i18n="res2_c">High</td>
+            <td data-i18n="res2_ticket">Medium–high</td>
+            <td data-i18n="res2_r">Emergencies + maintenance</td>
+          </tr>
+          <tr>
+            <th scope="row" data-i18n="res3_t">Electrical</th>
+            <td><div class="demand" data-demand="5"><span class="demand-bars" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span><span class="demand-score">5/5</span></div></td>
+            <td data-i18n="res3_c">High</td>
+            <td data-i18n="res3_ticket">Medium</td>
+            <td data-i18n="res3_r">Projects + repairs</td>
+          </tr>
+          <tr>
+            <th scope="row" data-i18n="res4_t">Roofing</th>
+            <td><div class="demand" data-demand="5"><span class="demand-bars" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span><span class="demand-score">5/5</span></div></td>
+            <td data-i18n="res4_c">Very high</td>
+            <td data-i18n="res4_ticket">Very high (US$ 5K–20K)</td>
+            <td data-i18n="res4_r">Low frequency, high value</td>
+          </tr>
+          <tr>
+            <th scope="row" data-i18n="res5_t">Landscaping</th>
+            <td><div class="demand" data-demand="4"><span class="demand-bars" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span><span class="demand-score">4/5</span></div></td>
+            <td data-i18n="res5_c">High</td>
+            <td data-i18n="res5_ticket">Low–medium</td>
+            <td data-i18n="res5_r">Weekly / monthly</td>
+          </tr>
+          <tr>
+            <th scope="row" data-i18n="res6_t">Pool service</th>
+            <td><div class="demand" data-demand="4"><span class="demand-bars" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span><span class="demand-score">4/5</span></div></td>
+            <td data-i18n="res6_c">Medium</td>
+            <td data-i18n="res6_ticket">Medium</td>
+            <td data-i18n="res6_r">Monthly</td>
+          </tr>
+          <tr>
+            <th scope="row" data-i18n="res7_t">Pest control</th>
+            <td><div class="demand" data-demand="4"><span class="demand-bars" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span><span class="demand-score">4/5</span></div></td>
+            <td data-i18n="res7_c">Medium</td>
+            <td data-i18n="res7_ticket">Low–medium</td>
+            <td data-i18n="res7_r">Monthly / quarterly</td>
+          </tr>
+          <tr>
+            <th scope="row" data-i18n="res8_t">Handyman</th>
+            <td><div class="demand" data-demand="4"><span class="demand-bars" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span><span class="demand-score">4/5</span></div></td>
+            <td data-i18n="res8_c">High</td>
+            <td data-i18n="res8_ticket">Low–medium</td>
+            <td data-i18n="res8_r">Variable</td>
+          </tr>
+          <tr>
+            <th scope="row" data-i18n="res9_t">Pressure washing</th>
+            <td><div class="demand" data-demand="3"><span class="demand-bars" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span><span class="demand-score">3/5</span></div></td>
+            <td data-i18n="res9_c">Medium</td>
+            <td data-i18n="res9_ticket">Low</td>
+            <td data-i18n="res9_r">Seasonal</td>
+          </tr>
+        </tbody>
+      </table>
     </div>
   </div>
 </section>
 
 <style>
-  .chart-wrap { display: grid; grid-template-columns: 1.25fr .75fr; gap: 18px }
-  .chart-card { padding: 26px; border: 1px solid var(--line); border-radius: 24px; background: #080a0d }
-  .chart-top { display: flex; justify-content: space-between; align-items: start; margin-bottom: 22px }
-  .metric { font-family: "Space Grotesk"; font-size: 38px }
-  .delta { font-size: 11px; color: #83f0a5 }
-  .chart { width: 100%; height: 270px }
-  .chart :global(path.line) { fill: none; stroke: var(--red2); stroke-width: 3; stroke-linecap: round; stroke-linejoin: round;
-    stroke-dasharray: 1000; stroke-dashoffset: 1000 }
-  .chart :global(.area) { fill: url(#fade) }
-  .axis { stroke: rgba(255,255,255,.08); stroke-width: 1 }
-  .legend { display: flex; gap: 20px; color: #7f8690; font-size: 10px; text-transform: uppercase; letter-spacing: .12em }
-  .legend b { color: #fff }
-
-  @media (max-width: 850px) {
-    .chart-wrap { grid-template-columns: 1fr }
-  }
+  .matrix-shell { border: 1px solid var(--line); border-radius: 24px; background: #080a0d; overflow: hidden }
+  .matrix-scroll { overflow-x: auto }
+  .res-matrix { width: 100%; min-width: 850px; border-collapse: collapse; text-align: left }
+  .res-matrix th, .res-matrix td { padding: 17px 20px; border-bottom: 1px solid var(--line); vertical-align: middle }
+  .res-matrix thead th { color: #7f8690; background: rgba(255,255,255,.025); font-size: 10px; font-weight: 500; letter-spacing: .12em; text-transform: uppercase }
+  .res-matrix tbody th { color: #fff; font-family: "Space Grotesk"; font-size: 15px; font-weight: 600 }
+  .res-matrix tbody td { color: var(--muted); font-size: 12px }
+  .res-matrix tbody tr { transition: background .25s var(--ease) }
+  .res-matrix tbody tr:hover { background: rgba(227,6,47,.045) }
+  .res-matrix tbody tr:last-child th, .res-matrix tbody tr:last-child td { border-bottom: 0 }
+  .demand { display: flex; align-items: center; gap: 10px; min-width: 112px }
+  .demand-bars { display: flex; gap: 3px }
+  .demand-bars i { display: block; width: 14px; height: 5px; border-radius: 3px; background: rgba(255,255,255,.1) }
+  .demand[data-demand="5"] i:nth-child(-n+5), .demand[data-demand="4"] i:nth-child(-n+4), .demand[data-demand="3"] i:nth-child(-n+3) { background: var(--red) }
+  .demand-score { color: #fff; font-size: 11px; font-weight: 700 }
 </style>

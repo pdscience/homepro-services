@@ -6,6 +6,7 @@ import Navbar from '../components/Navbar.astro';
 import Hero from '../components/Hero.astro';
 import Services from '../components/Services.astro';
 import Differentials from '../components/Differentials.astro';
+import MarketStats from '../components/MarketStats.astro';
 import Results from '../components/Results.astro';
 import Dashboard from '../components/Dashboard.astro';
 import BeforeAfter from '../components/BeforeAfter.astro';
@@ -25,6 +26,7 @@ import Footer from '../components/Footer.astro';
   <main>
     <Services />
     <Differentials />
+    <MarketStats />
     <Results />
     <Dashboard />
     <BeforeAfter />
@@ -34,10 +36,16 @@ import Footer from '../components/Footer.astro';
     <ContactForm />
     <section class="section" id="join">
       <div class="cta-banner reveal">
-        <div>
+        <div class="join-copy">
           <div class="kicker" data-i18n="prosign_kicker">07 / For pros</div>
           <h2 data-i18n="prosign_h1">Are you a pro?<br />Join us.</h2>
           <p data-i18n="prosign_desc">Offer your services across Florida. Apply in 1 minute — we review every application and publish approved pros in our directory.</p>
+          <ul class="join-points">
+            <li><strong data-i18n="join1_n">1,972</strong><span data-i18n="join1_l">new trade contractors added in Florida in 30 days</span></li>
+            <li><strong data-i18n="join2_n">9.46%</strong><span data-i18n="join2_l">of the local workforce runs its own business</span></li>
+            <li><strong data-i18n="join3_n">365</strong><span data-i18n="join3_l">days of recurring demand across HVAC, pools and pest control</span></li>
+            <li><strong data-i18n="join4_n">54.9%</strong><span data-i18n="join4_l">of local homes speak Spanish at home</span></li>
+          </ul>
         </div>
         <a class="btn primary" href="/profissional"><span data-i18n="prosign_btn">Apply now</span> &uarr;</a>
       </div>
@@ -58,9 +66,17 @@ import Footer from '../components/Footer.astro';
     .cta-banner h2 { font-size: clamp(34px,4.5vw,58px) }
     .cta-banner p { color: var(--muted); line-height: 1.7; font-size: 13px; max-width: 520px }
     .cta-banner .btn { position: relative; z-index: 2; white-space: nowrap }
+    .join-copy { flex: 1; min-width: 0 }
+    .join-points { list-style: none; display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 10px; padding: 0; margin: 26px 0 0; max-width: 720px }
+    .join-points li { border: 1px solid var(--line); border-radius: 16px; padding: 14px 16px; background: rgba(255,255,255,.025) }
+    .join-points strong { display: block; color: #fff; font-family: "Space Grotesk"; font-size: 22px; line-height: 1; margin-bottom: 7px }
+    .join-points span { display: block; color: var(--muted); font-size: 11px; line-height: 1.45 }
 
     @media (max-width: 850px) {
       .cta-banner { flex-direction: column; align-items: start; padding: 30px }
+    }
+    @media (max-width: 560px) {
+      .join-points { grid-template-columns: 1fr }
     }
   </style>
 </Layout>

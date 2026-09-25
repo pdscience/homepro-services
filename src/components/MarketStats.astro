@@ -1,0 +1,35 @@
+---
+---
+<section class="section" id="market-proof">
+  <div class="section-head reveal">
+    <div><div class="kicker" data-i18n="mkt_kicker">Regional market</div><h2 data-i18n="mkt_h1">A deep pool of<br>local talent.</h2></div>
+    <p data-i18n="mkt_desc">South Florida's home-services market is expanding fast. These regional indicators show why the right local professional matters.</p>
+  </div>
+  <div class="market-grid">
+    <article class="market-stat reveal"><strong data-i18n="mkt1_n">US$ 12B</strong><h3 data-i18n="mkt1_t">HVAC market</h3><p data-i18n="mkt1_p">Florida leads the United States in HVAC revenue.</p></article>
+    <article class="market-stat reveal"><strong data-i18n="mkt2_n">6,346</strong><h3 data-i18n="mkt2_t">Roofing contractors</h3><p data-i18n="mkt2_p">Florida ranks first in the United States for roof replacements.</p></article>
+    <article class="market-stat reveal"><strong data-i18n="mkt3_n">+11%</strong><h3 data-i18n="mkt3_t">Plumbing growth</h3><p data-i18n="mkt3_p">Projected market growth through 2033.</p></article>
+    <article class="market-stat reveal"><strong data-i18n="mkt4_n">24,160</strong><h3 data-i18n="mkt4_t">Regional contractors</h3><p data-i18n="mkt4_p">Registered professionals serving the Florida City area.</p></article>
+    <article class="market-stat reveal"><strong data-i18n="mkt5_n">+12%</strong><h3 data-i18n="mkt5_t">HVAC wage growth</h3><p data-i18n="mkt5_p">Florida salary growth over the past year.</p></article>
+    <article class="market-stat reveal"><strong data-i18n="mkt6_n">#1</strong><h3 data-i18n="mkt6_t">Most demanded trade</h3><p data-i18n="mkt6_p">Electrical work leads Florida demand for 2026.</p></article>
+  </div>
+  <p class="market-note reveal" data-i18n="mkt_note">Regional market indicators; figures do not represent HomePro's active contractor count.</p>
+</section>
+
+<style>
+  .market-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 16px }
+  .market-stat { min-height: 230px; padding: 28px; border: 1px solid var(--line); border-radius: 24px; background: linear-gradient(145deg,#0c0e12,#07080a); position: relative; overflow: hidden }
+  .market-stat:after { content: ""; position: absolute; width: 150px; height: 150px; right: -75px; bottom: -75px; background: var(--red); filter: blur(65px); opacity: .1 }
+  .market-stat strong { display: block; color: #fff; font-family: "Space Grotesk"; font-size: clamp(34px,4vw,52px); line-height: 1; letter-spacing: -.055em }
+  .market-stat h3 { font-family: "Space Grotesk"; font-size: 17px; margin: 38px 0 8px }
+  .market-stat p { color: var(--muted); font-size: 13px; line-height: 1.6; max-width: 280px }
+  .market-note { color: #7f848c; font-size: 11px; margin: 16px 0 0 }
+
+  @media (max-width: 850px) {
+    .market-grid { grid-template-columns: 1fr 1fr }
+  }
+  @media (max-width: 560px) {
+    .market-grid { grid-template-columns: 1fr }
+    .market-stat { min-height: 200px }
+  }
+</style>
