@@ -7,13 +7,12 @@
         <div class="kicker" data-i18n="cta_kicker">06 / Get in touch</div>
         <h2 data-i18n="cta_h1">Ready to<br>get started?</h2>
         <p data-i18n="cta_desc">Tell us about your project, your home, and what you need. We'll respond with a custom quote within hours.</p>
-        <p class="form-note" data-i18n="cta_note">Replace the WhatsApp number in CONFIG before publishing.</p>
       </div>
       <form class="form" id="leadForm">
-        <input class="field" name="nome" data-i18n-placeholder="form_name" placeholder="Your name" required />
-        <input class="field" name="empresa" data-i18n-placeholder="form_addr" placeholder="Address / property" />
-        <input class="field" name="email" type="email" data-i18n-placeholder="form_email" placeholder="Email" required />
-        <textarea class="field" name="mensagem" data-i18n-placeholder="form_msg" placeholder="What service do you need?"></textarea>
+        <input class="field" name="nome" data-i18n-placeholder="form_name" data-i18n-aria="form_name" aria-label="Your name" placeholder="Your name" required />
+        <input class="field" name="empresa" data-i18n-placeholder="form_addr" data-i18n-aria="form_addr" aria-label="Address / property" placeholder="Address / property" />
+        <input class="field" name="email" type="email" data-i18n-placeholder="form_email" data-i18n-aria="form_email" aria-label="Email" placeholder="Email" required />
+        <textarea class="field" name="mensagem" data-i18n-placeholder="form_msg" data-i18n-aria="form_msg" aria-label="What service do you need?" placeholder="What service do you need?"></textarea>
         <button class="btn primary" type="submit"><span data-i18n="form_btn">Send via WhatsApp</span> &uarr;</button>
         <div class="form-status" id="formStatus"></div>
       </form>
@@ -31,7 +30,6 @@
   .field { background: #0a0c0f; border: 1px solid rgba(255,255,255,.12); border-radius: 14px; padding: 14px 16px; color: #fff; outline: none; width: 100%; transition: .25s }
   .field:focus { border-color: rgba(255,255,255,.45); box-shadow: 0 0 0 4px rgba(227,6,47,.08) }
   textarea.field { min-height: 120px; resize: vertical }
-  .form-note { font-size: 10px !important; color: #686f79 !important }
   .form-status { font-size: 12px; color: #83f0a5; min-height: 18px }
 
   @media (max-width: 850px) {

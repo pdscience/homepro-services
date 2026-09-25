@@ -1,0 +1,365 @@
+---
+import Layout from '../layouts/Layout.astro';
+import FlagStrip from '../components/FlagStrip.astro';
+import CursorEffects from '../components/CursorEffects.astro';
+import Navbar from '../components/Navbar.astro';
+import Footer from '../components/Footer.astro';
+import { PROFESSIONALS as MOCK_PROS, PROFESSIONS, CITIES, type Professional } from '../data/professionals';
+import { getSupabase, type ProfessionalRow } from '../lib/supabase';
+
+function mapRow(r: ProfessionalRow): Professional {
+  return {
+    id: r.slug, name: r.name, profession: r.profession as Professional['profession'],
+    city: r.city, county: r.county, zipCodes: r.zip_codes,
+    phone: r.phone, phoneDisplay: r.phone_display, email: r.email, photo: r.photo,
+    rating: Number(r.rating), reviews: r.reviews, yearsExperience: r.years_experience,
+    license: r.license, languages: r.languages, emergency24h: r.emergency_24h,
+    about: r.about, about_pt: r.about_pt, about_es: r.about_es,
+  };
+}
+
+// Live data from Supabase; falls back to local mocks if env/table is unreachable
+let PROS: Professional[] = MOCK_PROS;
+try {
+  const supabase = getSupabase();
+  if (supabase) {
+    const { data, error } = await supabase
+      .from('professionals').select('*').eq('is_active', true).order('rating', { ascending: false });
+    if (!error && data && data.length > 0) PROS = (data as ProfessionalRow[]).map(mapRow);
+  }
+} catch { /* keep mocks */ }
+
+const PROF_LABEL_EN: Record<string, string> = {
+  hvac: "HVAC",
+  plumbing: "Plumbing",
+  electrical: "Electrical",
+  roofing: "Roofing",
+  "impact-windows": "Impact Windows",
+  pools: "Pools",
+  "pest-control": "Pest Control",
+  generators: "Generators",
+  landscaping: "Landscaping",
+  "pressure-washing": "Pressure Washing",
+  handyman: "Handyman",
+  "home-cleaning": "Home Cleaning",
+};
+---
+
+<Layout title="Professionals — HomePro Services" description="Browse licensed home service professionals across Florida. Filter by profession, city and ZIP code. Contact via WhatsApp or email.">
+  <FlagStrip />
+  <CursorEffects />
+  <Navbar />
+
+  <main class="section">
+    <div class="section-head reveal">
+      <div>
+        <div class="kicker" data-pros-i18n="kicker">07 / Professionals</div>
+        <h2 data-pros-i18n="h1">Choose your<br />professional.</h2>
+      </div>
+      <p data-pros-i18n="desc">Licensed pros across Florida. Filter by profession, city and ZIP code — Florida searches by County &gt; City &gt; ZIP, and every card shows all three.</p>
+    </div>
+
+    <div class="filterbar reveal">
+      <input id="prosSearch" class="field" type="search" data-pros-i18n-aria="fSearch" aria-label="Search by name…" data-pros-i18n-ph="searchPh" placeholder="Search by name…" autocomplete="off" />
+      <select id="prosProfession" class="field" data-pros-i18n-aria="fProf" aria-label="Profession">
+        <option value="" data-pros-i18n="allProf">All professions</option>
+        {PROFESSIONS.map((p) => <option value={p} data-prof-key={p}>{PROF_LABEL_EN[p]}</option>)}
+      </select>
+      <select id="prosCity" class="field" data-pros-i18n-aria="fCity" aria-label="City">
+        <option value="" data-pros-i18n="allCities">All cities</option>
+        {CITIES.map((c) => <option value={c}>{c}</option>)}
+      </select>
+      <input id="prosZip" class="field" inputmode="numeric" maxlength="5" data-pros-i18n-aria="fZip" aria-label="ZIP code" data-pros-i18n-ph="zipPh" placeholder="ZIP code…" autocomplete="off" />
+      <button id="prosClear" class="btn" type="button" data-pros-i18n="clear">Clear</button>
+    </div>
+    <div class="countline"><span id="prosCount"></span></div>
+
+    <div class="grid" id="prosGrid">
+      {PROS.map((pro) => (
+        <article
+          class="glass pro-card"
+          data-id={pro.id}
+          data-name={pro.name.toLowerCase()}
+          data-profession={pro.profession}
+          data-city={pro.city}
+          data-zips={pro.zipCodes.join(" ")}
+        >
+          {pro.emergency24h && <span class="emg" data-pros-i18n="emg">24/7</span>}
+          <div class="pro-top">
+            <img src={pro.photo} alt={pro.name} loading="lazy" width="72" height="72" />
+            <div>
+              <h3>{pro.name}</h3>
+              <span class="prof-badge" data-prof-key={pro.profession}>{PROF_LABEL_EN[pro.profession]}</span>
+            </div>
+          </div>
+          <div class="pro-meta">★ {pro.rating.toFixed(1)} · <span>{pro.reviews} <i data-pros-i18n="reviews">reviews</i></span> · <span>{pro.yearsExperience} <i data-pros-i18n="yrs">yrs exp.</i></span></div>
+          <div class="pro-cover">📍 {pro.city} · {pro.zipCodes.join(", ")} — <span data-county={pro.county}>{pro.county} County</span></div>
+          <div class="pro-license">{pro.license}</div>
+          <div class="pro-actions">
+            <button class="btn primary" type="button" data-pros-profile={pro.id} data-pros-i18n="profile">View profile</button>
+          </div>
+        </article>
+      ))}
+    </div>
+
+    <div class="empty" id="prosEmpty" hidden>
+      <b data-pros-i18n="emptyT">No professionals found.</b>
+      <p data-pros-i18n="emptyP">Try clearing the filters or searching another city / ZIP code.</p>
+    </div>
+  </main>
+
+  <div class="modal-overlay" id="prosModal" hidden>
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="mName">
+      <button class="modal-x" id="prosModalX" type="button" data-i18n-aria="ui_close" aria-label="Close">✕</button>
+      <div class="pro-top">
+        <img id="mPhoto" src="" alt="" width="88" height="88" />
+        <div>
+          <h3 id="mName"></h3>
+          <span class="prof-badge" id="mProf"></span>
+        </div>
+      </div>
+      <div class="pro-meta" id="mMeta"></div>
+      <p class="m-about" id="mAbout"></p>
+      <div class="m-grid">
+        <div><b data-pros-i18n="license">License</b><span id="mLicense"></span></div>
+        <div><b data-pros-i18n="langs">Languages</b><span id="mLangs"></span></div>
+        <div><b data-pros-i18n="coverage">Coverage</b><span id="mCover"></span></div>
+        <div><b data-pros-i18n="phone">Phone</b><span id="mPhone"></span></div>
+      </div>
+      <div class="pro-actions">
+        <a class="btn wa" id="mWa" href="#" target="_blank" rel="noopener">WhatsApp</a>
+        <a class="btn" id="mEmail" href="#">Email</a>
+      </div>
+    </div>
+  </div>
+
+  <script type="application/json" id="pros-data" set:html={JSON.stringify(PROS)}></script>
+
+  <Footer />
+</Layout>
+
+<script is:inline>
+  const PROS_I18N = {
+    en: {
+      kicker: "07 / Professionals", h1: "Choose your<br />professional.",
+      desc: "Licensed pros across Florida. Filter by profession, city and ZIP code — Florida searches by County > City > ZIP, and every card shows all three.",
+      searchPh: "Search by name…", fSearch: "Search by name", fProf: "Profession", fCity: "City", fZip: "ZIP code", allProf: "All professions", allCities: "All cities",
+      zipPh: "ZIP code…", clear: "Clear", reviews: "reviews", yrs: "yrs exp.",
+      profile: "View profile", emg: "24/7", license: "License", langs: "Languages",
+      coverage: "Coverage", phone: "Phone", emptyT: "No professionals found.",
+      emptyP: "Try clearing the filters or searching another city / ZIP code.",
+      found: (n) => n === 1 ? "1 professional found" : `${n} professionals found`,
+      county: (c) => `${c} County`,
+      hvac: "HVAC", plumbing: "Plumbing", electrical: "Electrical", roofing: "Roofing",
+      "impact-windows": "Impact Windows", pools: "Pools", "pest-control": "Pest Control",
+      generators: "Generators", landscaping: "Landscaping", "pressure-washing": "Pressure Washing",
+      handyman: "Handyman", "home-cleaning": "Home Cleaning",
+      waMsg: (n) => `Hello ${n}! I found you on HomePro Services and would like a quote.`,
+    },
+    pt: {
+      kicker: "07 / Profissionais", h1: "Escolha seu<br />profissional.",
+      desc: "Profissionais licenciados na Flórida. Filtre por profissão, cidade e CEP (ZIP) — na Flórida a busca é Condado > Cidade > ZIP, e cada card mostra os três.",
+      searchPh: "Buscar por nome…", fSearch: "Buscar por nome", fProf: "Profissão", fCity: "Cidade", fZip: "CEP (ZIP)", allProf: "Todas as profissões", allCities: "Todas as cidades",
+      zipPh: "CEP (ZIP)…", clear: "Limpar", reviews: "avaliações", yrs: "anos exp.",
+      profile: "Ver perfil", emg: "24/7", license: "Licença", langs: "Idiomas",
+      coverage: "Cobertura", phone: "Telefone", emptyT: "Nenhum profissional encontrado.",
+      emptyP: "Tente limpar os filtros ou buscar outra cidade / CEP.",
+      found: (n) => n === 1 ? "1 profissional encontrado" : `${n} profissionais encontrados`,
+      county: (c) => `Condado ${c}`,
+      hvac: "HVAC", plumbing: "Encanamento", electrical: "Elétrica", roofing: "Telhados",
+      "impact-windows": "Janelas de Impacto", pools: "Piscinas", "pest-control": "Controle de Pragas",
+      generators: "Geradores", landscaping: "Jardinagem", "pressure-washing": "Lavagem a Pressão",
+      handyman: "Faz-tudo", "home-cleaning": "Limpeza Residencial",
+      waMsg: (n) => `Olá ${n}! Encontrei você na HomePro Services e gostaria de um orçamento.`,
+    },
+    es: {
+      kicker: "07 / Profesionales", h1: "Elige tu<br />profesional.",
+      desc: "Profesionales licenciados en Florida. Filtra por profesión, ciudad y código postal (ZIP) — en Florida se busca por Condado > Ciudad > ZIP, y cada tarjeta muestra los tres.",
+      searchPh: "Buscar por nombre…", fSearch: "Buscar por nombre", fProf: "Profesión", fCity: "Ciudad", fZip: "Código ZIP", allProf: "Todas las profesiones", allCities: "Todas las ciudades",
+      zipPh: "Código ZIP…", clear: "Limpiar", reviews: "reseñas", yrs: "años exp.",
+      profile: "Ver perfil", emg: "24/7", license: "Licencia", langs: "Idiomas",
+      coverage: "Cobertura", phone: "Teléfono", emptyT: "Ningún profesional encontrado.",
+      emptyP: "Intenta limpiar los filtros o buscar otra ciudad / ZIP.",
+      found: (n) => n === 1 ? "1 profesional encontrado" : `${n} profesionales encontrados`,
+      county: (c) => `Condado ${c}`,
+      hvac: "HVAC", plumbing: "Plomería", electrical: "Electricidad", roofing: "Techos",
+      "impact-windows": "Ventanas de Impacto", pools: "Piscinas", "pest-control": "Control de Plagas",
+      generators: "Generadores", landscaping: "Jardinería", "pressure-washing": "Lavado a Presión",
+      handyman: "Manitas", "home-cleaning": "Limpieza del Hogar",
+      waMsg: (n) => `Hola ${n}! Te encontré en HomePro Services y me gustaría una cotización.`,
+    },
+  };
+
+  function prosLang() { return localStorage.getItem('homepro_lang') || 'en'; }
+
+  function applyProsLang() {
+    const lang = prosLang();
+    const t = PROS_I18N[lang] || PROS_I18N.en;
+    document.querySelectorAll('[data-pros-i18n]').forEach((el) => {
+      const k = el.getAttribute('data-pros-i18n');
+      if (t[k] !== undefined && typeof t[k] === 'string') el.innerHTML = t[k];
+    });
+    document.querySelectorAll('[data-pros-i18n-ph]').forEach((el) => {
+      const k = el.getAttribute('data-pros-i18n-ph');
+      if (t[k] !== undefined) el.placeholder = t[k];
+    });
+    document.querySelectorAll('[data-pros-i18n-aria]').forEach((el) => {
+      const k = el.getAttribute('data-pros-i18n-aria');
+      if (t[k] !== undefined) el.setAttribute('aria-label', t[k]);
+    });
+    document.querySelectorAll('[data-prof-key]').forEach((el) => {
+      const k = el.getAttribute('data-prof-key');
+      if (t[k]) el.textContent = t[k];
+    });
+    document.querySelectorAll('[data-county]').forEach((el) => {
+      el.textContent = t.county(el.getAttribute('data-county'));
+    });
+    updateCount();
+  }
+
+  function updateCount() {
+    const lang = prosLang();
+    const t = PROS_I18N[lang] || PROS_I18N.en;
+    const visible = [...document.querySelectorAll('.pro-card')].filter((c) => !c.hidden).length;
+    const el = document.getElementById('prosCount');
+    if (el) el.textContent = t.found(visible);
+    document.getElementById('prosEmpty').hidden = visible !== 0;
+  }
+
+  function applyFilters() {
+    const q = document.getElementById('prosSearch').value.trim().toLowerCase();
+    const pf = document.getElementById('prosProfession').value;
+    const cf = document.getElementById('prosCity').value;
+    const zf = document.getElementById('prosZip').value.trim();
+    document.querySelectorAll('.pro-card').forEach((card) => {
+      const okQ = !q || card.dataset.name.includes(q);
+      const okP = !pf || card.dataset.profession === pf;
+      const okC = !cf || card.dataset.city === cf;
+      const okZ = !zf || (card.dataset.zips || '').split(' ').some((z) => z.startsWith(zf));
+      card.hidden = !(okQ && okP && okC && okZ);
+    });
+    updateCount();
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    try {
+      const raw = document.getElementById('pros-data').textContent;
+      const pros = JSON.parse(raw);
+      window._prosById = Object.fromEntries(pros.map((p) => [p.id, p]));
+    } catch (e) { window._prosById = {}; }
+
+    ['prosSearch', 'prosProfession', 'prosCity', 'prosZip'].forEach((id) => {
+      const el = document.getElementById(id);
+      el.addEventListener('input', applyFilters);
+      el.addEventListener('change', applyFilters);
+    });
+    document.getElementById('prosClear').addEventListener('click', () => {
+      document.getElementById('prosSearch').value = '';
+      document.getElementById('prosProfession').value = '';
+      document.getElementById('prosCity').value = '';
+      document.getElementById('prosZip').value = '';
+      applyFilters();
+    });
+    document.querySelectorAll('.lang-btn').forEach((b) => b.addEventListener('click', () => {
+      setTimeout(applyProsLang, 0);
+    }));
+
+    const modal = document.getElementById('prosModal');
+    let lastTrigger = null;
+    function openModal(id) {
+      const p = window._prosById[id];
+      if (!p) return;
+      lastTrigger = document.activeElement;
+      const lang = prosLang();
+      const t = PROS_I18N[lang] || PROS_I18N.en;
+      document.getElementById('mPhoto').src = p.photo;
+      document.getElementById('mPhoto').alt = p.name;
+      document.getElementById('mName').textContent = p.name;
+      document.getElementById('mProf').textContent = t[p.profession] || p.profession;
+      document.getElementById('mMeta').textContent = `★ ${p.rating.toFixed(1)} · ${p.reviews} ${t.reviews} · ${p.yearsExperience} ${t.yrs}`;
+      document.getElementById('mAbout').textContent = p[lang === 'en' ? 'about' : `about_${lang}`] || p.about;
+      document.getElementById('mLicense').textContent = p.license;
+      document.getElementById('mLangs').textContent = p.languages.join(' · ');
+      document.getElementById('mCover').textContent = `${p.city} · ${p.zipCodes.join(', ')} — ${t.county(p.county)}`;
+      document.getElementById('mPhone').textContent = p.phoneDisplay;
+      document.getElementById('mWa').href = `https://wa.me/${p.phone}?text=${encodeURIComponent(t.waMsg(p.name))}`;
+      document.getElementById('mEmail').href = `mailto:${p.email}?subject=${encodeURIComponent('Quote request via HomePro Services')}`;
+      modal.hidden = false;
+      document.body.style.overflow = 'hidden';
+      document.getElementById('prosModalX').focus();
+    }
+    function closeModal() {
+      modal.hidden = true;
+      document.body.style.overflow = '';
+      if (lastTrigger && typeof lastTrigger.focus === 'function') lastTrigger.focus();
+      lastTrigger = null;
+    }
+    document.querySelectorAll('[data-pros-profile]').forEach((b) =>
+      b.addEventListener('click', () => openModal(b.getAttribute('data-pros-profile'))));
+    document.getElementById('prosModalX').addEventListener('click', closeModal);
+    modal.addEventListener('click', (e) => { if (e.target === modal) closeModal(); });
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && !modal.hidden) closeModal(); });
+
+    applyProsLang();
+    applyFilters();
+  });
+</script>
+
+<style>
+  .filterbar { display: grid; grid-template-columns: 1.4fr 1fr 1fr .7fr auto; gap: 10px; margin-bottom: 14px;
+    border: 1px solid var(--line); border-radius: 20px; padding: 14px; background: #080a0d }
+  .field { background: #0a0c0f; border: 1px solid rgba(255,255,255,.12); border-radius: 12px;
+    padding: 12px 14px; color: #fff; outline: none; width: 100%; font-size: 13px }
+  .field:focus { border-color: rgba(255,255,255,.45) }
+  select.field option { background: #0a0c0f }
+  .countline { font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); margin: 4px 2px 22px }
+  .grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 16px }
+  .glass { position: relative; padding: 24px; border: 1px solid rgba(255,255,255,.12); border-radius: 24px;
+    background: linear-gradient(145deg,rgba(255,255,255,.085),rgba(255,255,255,.018));
+    box-shadow: 0 30px 90px rgba(0,0,0,.35), inset 0 1px 0 rgba(255,255,255,.08);
+    backdrop-filter: blur(20px); overflow: hidden }
+  .glass:before { content: ""; position: absolute; width: 190px; height: 190px; right: -80px; top: -80px;
+    background: var(--red); filter: blur(80px); opacity: .14 }
+  .emg { position: absolute; top: 16px; right: 16px; font-size: 9px; letter-spacing: .16em;
+    background: var(--red); border-radius: 999px; padding: 4px 10px; z-index: 2 }
+  .pro-top { display: flex; gap: 14px; align-items: center; margin-bottom: 12px }
+  .pro-top img { width: 72px; height: 72px; border-radius: 50%; object-fit: cover; border: 2px solid rgba(255,255,255,.2) }
+  .pro-top h3 { margin: 0 0 6px; font-family: "Space Grotesk"; font-size: 20px }
+  .prof-badge { font-size: 9px; letter-spacing: .16em; text-transform: uppercase; color: #fff;
+    border: 1px solid rgba(255,255,255,.2); border-radius: 999px; padding: 4px 10px; background: rgba(255,255,255,.06) }
+  .pro-meta { font-size: 12px; color: #cfd2d8; margin-bottom: 8px }
+  .pro-meta i { font-style: normal }
+  .pro-cover { font-size: 12px; color: var(--muted); margin-bottom: 6px }
+  .pro-license { font-size: 11px; color: #777e88; letter-spacing: .04em; margin-bottom: 16px }
+  .pro-actions { display: flex; gap: 8px; flex-wrap: wrap }
+  .pro-actions .btn { padding: 10px 14px; font-size: 12px }
+  .btn.wa { background: #1faa55; border-color: #1faa55; color: #fff; font-weight: 700 }
+  .btn.wa:hover { background: #25c064 }
+  .empty { text-align: center; border: 1px dashed rgba(255,255,255,.2); border-radius: 24px; padding: 50px 20px; margin-top: 10px }
+  .empty b { font-family: "Space Grotesk"; font-size: 22px }
+  .empty p { color: var(--muted); font-size: 13px }
+  .modal-overlay { position: fixed; inset: 0; z-index: 200; background: rgba(0,0,0,.7);
+    backdrop-filter: blur(6px); display: flex; align-items: center; justify-content: center; padding: 20px }
+  .modal-overlay[hidden] { display: none }
+  .modal { position: relative; width: min(560px,100%); max-height: 90vh; overflow: auto;
+    border: 1px solid rgba(255,255,255,.14); border-radius: 26px; padding: 30px;
+    background: linear-gradient(160deg,#101319,#07080a) }
+  .modal-x { position: absolute; top: 14px; right: 14px; background: none; border: 1px solid var(--line);
+    color: #fff; border-radius: 50%; width: 34px; height: 34px; cursor: pointer }
+  .modal .pro-top img { width: 88px; height: 88px }
+  .m-about { color: var(--muted); font-size: 13px; line-height: 1.65 }
+  .m-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 18px 0 20px }
+  .m-grid div { border: 1px solid rgba(255,255,255,.1); border-radius: 14px; padding: 12px 14px; background: rgba(255,255,255,.03) }
+  .m-grid b { display: block; font-size: 10px; text-transform: uppercase; letter-spacing: .18em; color: var(--red); margin-bottom: 6px }
+  .m-grid span { font-size: 13px }
+
+  @media (max-width: 1000px) {
+    .grid { grid-template-columns: 1fr 1fr }
+    .filterbar { grid-template-columns: 1fr 1fr }
+  }
+  @media (max-width: 640px) {
+    .grid { grid-template-columns: 1fr }
+    .filterbar { grid-template-columns: 1fr }
+    .m-grid { grid-template-columns: 1fr }
+  }
+</style>

@@ -2,13 +2,15 @@
 export interface Props {
   title?: string;
   description?: string;
+  /** Load the GSAP reveal animations (index only). */
+  gsap?: boolean;
 }
 
-const { title = "HomePro Services — Premium Home Services", description = "Premium residential services for American homeowners. Plumbing, electrical, HVAC, painting, landscaping and more — delivered with precision." } = Astro.props;
+const { title = "HomePro Services — Premium Home Services", description = "Premium residential services for American homeowners. Plumbing, electrical, HVAC, painting, landscaping and more — delivered with precision.", gsap = false } = Astro.props;
 ---
 
 <!doctype html>
-<html lang="en-US" class="no-js">
+<html lang="en-US" class:list={["no-js", gsap ? "has-gsap" : "no-gsap"]}>
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
@@ -35,7 +37,7 @@ const { title = "HomePro Services — Premium Home Services", description = "Pre
 
     const I18N = {
       en: {
-        nav_services: "Services", nav_results: "Results", nav_dashboard: "Dashboard",
+        nav_services: "Services", nav_pros: "Professionals", nav_results: "Results", nav_dashboard: "Opportunities",
         nav_portfolio: "Portfolio", nav_faq: "FAQ", nav_cta: "Get a free quote",
         hero_eyebrow: "Top-rated home services in Florida City",
         hero_h1_line1: "YOUR HOME,", hero_h1_line2: "PERFECTED.",
@@ -110,10 +112,26 @@ const { title = "HomePro Services — Premium Home Services", description = "Pre
         form_status: "Opening WhatsApp conversation...",
         wa_msg_prefix: "Hello! I came from the HomePro Services page.",
         wa_label_name: "Name", wa_label_addr: "Address", wa_label_email: "Email", wa_label_service: "Service needed",
-        footer_brand: "HOMEPRO SERVICES", footer_links: "Serving Florida City & South Florida · Privacy · Terms"
+        footer_brand: "HOMEPRO SERVICES", footer_links: "Serving Florida City & South Florida · Privacy · Terms",
+        prosign_kicker: "07 / For pros", prosign_h1: "Are you a pro?<br>Join us.",
+        prosign_desc: "Offer your services across Florida. Apply in 1 minute — we review every application and publish approved pros in our directory.",
+        prosign_name: "Full name", prosign_prof: "Profession", prosign_city: "City", prosign_zip: "ZIP code",
+        prosign_phone: "WhatsApp / phone", prosign_email: "Email", prosign_license: "FL license number",
+        prosign_years: "Years of experience",         prosign_about: "Tell us about your work…", prosign_btn: "Apply now", prosign_photo: "Professional photo (JPG/PNG, max 5MB)",
+        hero_pro: "I'm a professional", prosign_tab_new: "New registration", prosign_tab_login: "I already have an account", prosign_login_btn: "Log in", ui_close: "Close", ui_access: "Access mode",
+        admin_kicker: "Restricted", admin_h1: "Admin<br>panel.", admin_desc: "Approve or reject professional applications. Administrators only.",
+        admin_login: "Log in", admin_email: "Email", admin_pass: "Password", admin_logout: "Log out",
+        admin_filter: "Filter by status", admin_st_pending: "Pending", admin_st_approved: "Approved", admin_st_rejected: "Rejected",
+        admin_nosb: "Supabase not configured.", admin_loading: "Loading…", admin_load_err: "Load error: ", admin_apps: "application(s)", admin_empty: "Nothing here.",
+        admin_approve: "Approve", admin_reject: "Reject",
+        admin_confirm_approve: "Approve {name}? It will go to the public directory.", admin_confirm_reject: "Reject {name}?",
+        admin_approving: "Approving…", admin_publish_err: "Error publishing: ", admin_publish_partial: "Published, but failed to mark as approved: ",
+        admin_publish_ok: "✅ {name} published to the directory.", admin_rejected_msg: "{name} rejected.", admin_err: "Error: ",
+        admin_entering: "Logging in…", admin_login_fail: "Login failed: ",
+        admin_lic: "License: ", admin_exp: "Exp: {n} yrs", admin_status: "status"
       },
       pt: {
-        nav_services: "Serviços", nav_results: "Resultados", nav_dashboard: "Painel",
+        nav_services: "Serviços", nav_pros: "Profissionais", nav_results: "Resultados", nav_dashboard: "Oportunidades",
         nav_portfolio: "Portfólio", nav_faq: "FAQ", nav_cta: "Orçamento grátis",
         hero_eyebrow: "Serviços top em Florida City",
         hero_h1_line1: "SUA CASA,", hero_h1_line2: "PERFEITA.",
@@ -188,10 +206,26 @@ const { title = "HomePro Services — Premium Home Services", description = "Pre
         form_status: "Abrindo conversa no WhatsApp...",
         wa_msg_prefix: "Olá! Vim pela página HomePro Services.",
         wa_label_name: "Nome", wa_label_addr: "Endereço", wa_label_email: "E-mail", wa_label_service: "Serviço necessário",
-        footer_brand: "HOMEPRO SERVICES", footer_links: "Florida City & Sul da Flórida · Privacidade · Termos"
+        footer_brand: "HOMEPRO SERVICES", footer_links: "Florida City & Sul da Flórida · Privacidade · Termos",
+        prosign_kicker: "07 / Para profissionais", prosign_h1: "É profissional?<br>Junte-se a nós.",
+        prosign_desc: "Ofereça seus serviços na Flórida. Cadastre-se em 1 minuto — revisamos cada candidatura e publicamos os aprovados no diretório.",
+        prosign_name: "Nome completo", prosign_prof: "Profissão", prosign_city: "Cidade", prosign_zip: "CEP (ZIP)",
+        prosign_phone: "WhatsApp / telefone", prosign_email: "E-mail", prosign_license: "Nº da licença FL",
+        prosign_years: "Anos de experiência",         prosign_about: "Conte sobre seu trabalho…", prosign_btn: "Cadastrar", prosign_photo: "Foto do profissional (JPG/PNG, máx 5MB)",
+        hero_pro: "Sou profissional", prosign_tab_new: "Novo cadastro", prosign_tab_login: "Já tenho cadastro", prosign_login_btn: "Entrar", ui_close: "Fechar", ui_access: "Modo de acesso",
+        admin_kicker: "Restrito", admin_h1: "Painel<br>admin.", admin_desc: "Aprove ou rejeite candidaturas de profissionais. Apenas administradores.",
+        admin_login: "Entrar", admin_email: "E-mail", admin_pass: "Senha", admin_logout: "Sair",
+        admin_filter: "Filtrar por status", admin_st_pending: "Pendentes", admin_st_approved: "Aprovadas", admin_st_rejected: "Rejeitadas",
+        admin_nosb: "Supabase não configurado.", admin_loading: "Carregando…", admin_load_err: "Erro ao carregar: ", admin_apps: "candidatura(s)", admin_empty: "Nada por aqui.",
+        admin_approve: "Aprovar", admin_reject: "Rejeitar",
+        admin_confirm_approve: "Aprovar {name}? Vai para o diretório público.", admin_confirm_reject: "Rejeitar {name}?",
+        admin_approving: "Aprovando…", admin_publish_err: "Erro ao publicar: ", admin_publish_partial: "Publicado, mas falhou ao marcar como aprovado: ",
+        admin_publish_ok: "✅ {name} publicado no diretório.", admin_rejected_msg: "{name} rejeitado.", admin_err: "Erro: ",
+        admin_entering: "Entrando…", admin_login_fail: "Falha no login: ",
+        admin_lic: "Licença: ", admin_exp: "Exp: {n} anos", admin_status: "status"
       },
       es: {
-        nav_services: "Servicios", nav_results: "Resultados", nav_dashboard: "Panel",
+        nav_services: "Servicios", nav_pros: "Profesionales", nav_results: "Resultados", nav_dashboard: "Oportunidades",
         nav_portfolio: "Portafolio", nav_faq: "Preguntas", nav_cta: "Cotización gratis",
         hero_eyebrow: "Top servicios en Florida City",
         hero_h1_line1: "TU CASA,", hero_h1_line2: "PERFECCIONADA.",
@@ -266,7 +300,23 @@ const { title = "HomePro Services — Premium Home Services", description = "Pre
         form_status: "Abriendo conversación de WhatsApp...",
         wa_msg_prefix: "Hola! Llegué desde la página HomePro Services.",
         wa_label_name: "Nombre", wa_label_addr: "Dirección", wa_label_email: "Correo", wa_label_service: "Servicio necesario",
-        footer_brand: "HOMEPRO SERVICES", footer_links: "Florida City & Sur de Florida · Privacidad · Términos"
+        footer_brand: "HOMEPRO SERVICES", footer_links: "Florida City & Sur de Florida · Privacidad · Términos",
+        prosign_kicker: "07 / Para profesionales", prosign_h1: "¿Eres profesional?<br>Únete.",
+        prosign_desc: "Ofrece tus servicios en Florida. Regístrate en 1 minuto — revisamos cada solicitud y publicamos los aprobados en el directorio.",
+        prosign_name: "Nombre completo", prosign_prof: "Profesión", prosign_city: "Ciudad", prosign_zip: "Código ZIP",
+        prosign_phone: "WhatsApp / teléfono", prosign_email: "Correo", prosign_license: "Nº de licencia FL",
+        prosign_years: "Años de experiencia",         prosign_about: "Cuéntanos sobre tu trabajo…", prosign_btn: "Registrarme", prosign_photo: "Foto del profesional (JPG/PNG, máx 5MB)",
+        hero_pro: "Soy profesional", prosign_tab_new: "Nuevo registro", prosign_tab_login: "Ya tengo registro", prosign_login_btn: "Entrar", ui_close: "Cerrar", ui_access: "Modo de acceso",
+        admin_kicker: "Restringido", admin_h1: "Panel<br>admin.", admin_desc: "Aprueba o rechaza solicitudes de profesionales. Solo administradores.",
+        admin_login: "Iniciar sesión", admin_email: "Correo", admin_pass: "Contraseña", admin_logout: "Cerrar sesión",
+        admin_filter: "Filtrar por estado", admin_st_pending: "Pendientes", admin_st_approved: "Aprobadas", admin_st_rejected: "Rechazadas",
+        admin_nosb: "Supabase no configurado.", admin_loading: "Cargando…", admin_load_err: "Error al cargar: ", admin_apps: "solicitud(es)", admin_empty: "Nada por aquí.",
+        admin_approve: "Aprobar", admin_reject: "Rechazar",
+        admin_confirm_approve: "¿Aprobar {name}? Irá al directorio público.", admin_confirm_reject: "¿Rechazar {name}?",
+        admin_approving: "Aprobando…", admin_publish_err: "Error al publicar: ", admin_publish_partial: "Publicado, pero falló al marcar como aprobado: ",
+        admin_publish_ok: "✅ {name} publicado en el directorio.", admin_rejected_msg: "{name} rechazado.", admin_err: "Error: ",
+        admin_entering: "Iniciando sesión…", admin_login_fail: "Fallo de inicio de sesión: ",
+        admin_lic: "Licencia: ", admin_exp: "Exp: {n} años", admin_status: "estado"
       }
     };
 
@@ -296,6 +346,10 @@ const { title = "HomePro Services — Premium Home Services", description = "Pre
         $$('[data-i18n-placeholder]').forEach(el => {
           const key = el.getAttribute('data-i18n-placeholder');
           if (t[key] !== undefined) (el as HTMLInputElement).placeholder = t[key];
+        });
+        $$('[data-i18n-aria]').forEach(el => {
+          const key = el.getAttribute('data-i18n-aria');
+          if (t[key] !== undefined) el.setAttribute('aria-label', t[key]);
         });
 
         const m = t.marquee;
@@ -369,10 +423,15 @@ const { title = "HomePro Services — Premium Home Services", description = "Pre
         q.addEventListener('click', () => {
           const open = item.classList.contains('open');
           $$('.faq-item.open').forEach(other => {
-            if (other !== item) { other.classList.remove('open'); const aa = $('.faq-a', other); if (aa) (aa as HTMLElement).style.height = '0px'; }
+            if (other !== item) {
+              other.classList.remove('open');
+              const aa = $('.faq-a', other); if (aa) (aa as HTMLElement).style.height = '0px';
+              const oq = $('.faq-q', other); if (oq) oq.setAttribute('aria-expanded', 'false');
+            }
           });
           item.classList.toggle('open', !open);
           (a as HTMLElement).style.height = !open ? a.scrollHeight + 'px' : '0px';
+          q.setAttribute('aria-expanded', String(!open));
         });
       });
 
@@ -416,6 +475,7 @@ const { title = "HomePro Services — Premium Home Services", description = "Pre
     --cyan: #8be8ff; --max: 1240px; --ease: cubic-bezier(.16,1,.3,1);
   }
   * { box-sizing: border-box }
+  [hidden] { display: none !important }
   html { scroll-behavior: smooth }
   body { margin: 0; background: var(--bg); color: var(--text); font-family: Inter, system-ui, sans-serif; overflow-x: hidden }
   a { color: inherit; text-decoration: none }
@@ -437,8 +497,8 @@ const { title = "HomePro Services — Premium Home Services", description = "Pre
   .btn:hover { transform: translateY(-2px); background: rgba(255,255,255,.11) }
   .btn.primary { background: #fff; color: #050608; border-color: #fff; font-weight: 700 }
 
-  .reveal { opacity: 0; transform: translateY(28px) }
-
+  .reveal { opacity: 1; transform: none }
+  html.has-gsap .reveal { opacity: 0; transform: translateY(28px) }
   html.no-gsap .reveal, html.no-js .reveal { opacity: 1; transform: none }
 
   @media (max-width: 850px) {
@@ -446,6 +506,6 @@ const { title = "HomePro Services — Premium Home Services", description = "Pre
   }
   @media (prefers-reduced-motion: reduce) {
     *, *:before, *:after { scroll-behavior: auto !important; animation: none !important; transition: none !important }
-    .reveal { opacity: 1; transform: none }
+    .reveal { opacity: 1 !important; transform: none !important }
   }
 </style>

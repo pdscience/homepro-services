@@ -1,0 +1,285 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Navbar from '../components/Navbar.astro';
+import Footer from '../components/Footer.astro';
+---
+
+<Layout title="Admin — HomePro Services" description="Restricted admin panel.">
+  <Navbar />
+
+  <main class="section">
+    <div class="section-head">
+      <div>
+        <div class="kicker" data-i18n="admin_kicker">Restricted</div>
+        <h2 data-i18n="admin_h1">Admin<br />panel.</h2>
+      </div>
+      <p data-i18n="admin_desc">Approve or reject professional applications. Administrators only.</p>
+    </div>
+
+    <div id="loginBox" class="box" hidden>
+      <h3 data-i18n="admin_login">Log in</h3>
+      <form id="loginForm" class="form">
+        <input class="field" type="email" name="email" placeholder="Email" data-i18n-placeholder="admin_email" data-i18n-aria="admin_email" aria-label="Email" required autocomplete="username" />
+        <input class="field" type="password" name="password" placeholder="Password" data-i18n-placeholder="admin_pass" data-i18n-aria="admin_pass" aria-label="Password" required autocomplete="current-password" />
+        <button class="btn primary" type="submit" data-i18n="admin_login">Log in</button>
+        <div class="form-status" id="loginStatus"></div>
+      </form>
+    </div>
+
+    <div id="panelBox" hidden>
+      <div class="toolbar">
+        <span id="adminEmail"></span>
+        <select id="statusFilter" class="field slim" data-i18n-aria="admin_filter" aria-label="Filter by status">
+          <option value="pending" data-i18n="admin_st_pending">Pending</option>
+          <option value="approved" data-i18n="admin_st_approved">Approved</option>
+          <option value="rejected" data-i18n="admin_st_rejected">Rejected</option>
+        </select>
+        <button class="btn" id="logoutBtn" type="button" data-i18n="admin_logout">Log out</button>
+      </div>
+      <div id="appList" class="list"></div>
+      <div class="form-status" id="panelStatus"></div>
+    </div>
+  </main>
+
+  <Footer />
+</Layout>
+
+<script>
+  import { getSupabase } from '../lib/supabase';
+
+  const COUNTY: Record<string, string> = {
+    'Fort Lauderdale': 'Broward',
+    'Orlando': 'Orange',
+    'Tampa': 'Hillsborough',
+    'Key West': 'Monroe',
+  };
+
+  const PROF: Record<string, Record<string, string>> = {
+    en: { hvac: "HVAC", plumbing: "Plumbing", electrical: "Electrical", roofing: "Roofing", "impact-windows": "Impact Windows", pools: "Pools", "pest-control": "Pest Control", generators: "Generators", landscaping: "Landscaping", "pressure-washing": "Pressure Washing", handyman: "Handyman", "home-cleaning": "Home Cleaning" },
+    pt: { hvac: "HVAC", plumbing: "Encanamento", electrical: "Elétrica", roofing: "Telhados", "impact-windows": "Janelas de Impacto", pools: "Piscinas", "pest-control": "Controle de Pragas", generators: "Geradores", landscaping: "Jardinagem", "pressure-washing": "Lavagem a Pressão", handyman: "Faz-tudo", "home-cleaning": "Limpeza Residencial" },
+    es: { hvac: "HVAC", plumbing: "Plomería", electrical: "Electricidad", roofing: "Techos", "impact-windows": "Ventanas de Impacto", pools: "Piscinas", "pest-control": "Control de Plagas", generators: "Generadores", landscaping: "Jardinería", "pressure-washing": "Lavado a Presión", handyman: "Manitas", "home-cleaning": "Limpieza del Hogar" },
+  };
+
+  const LOCALES: Record<string, string> = { en: 'en-US', pt: 'pt-BR', es: 'es-ES' };
+
+  function lang(): string { return localStorage.getItem('homepro_lang') || 'en'; }
+  function T(): any {
+    const I = (window as any).I18N || {};
+    return I[lang()] || I.en || {};
+  }
+  function fmt(s: unknown, vars: Record<string, unknown> = {}) {
+    return String(s ?? '').replace(/\{(\w+)\}/g, (_m, k: string) => String(vars[k] ?? ''));
+  }
+  function profLabel(key: string) {
+    return (PROF[lang()] || PROF.en)[key] || key;
+  }
+
+  function slugify(s: string) {
+    return s.normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+      .toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
+  }
+
+  function avatar(name: string) {
+    return 'https://ui-avatars.com/api/?name=' + encodeURIComponent(name) +
+      '&size=400&background=e3062f&color=fff';
+  }
+
+  const loginBox = document.getElementById('loginBox') as HTMLElement;
+  const panelBox = document.getElementById('panelBox') as HTMLElement;
+  const loginStatus = document.getElementById('loginStatus') as HTMLElement;
+  const panelStatus = document.getElementById('panelStatus') as HTMLElement;
+  const appList = document.getElementById('appList') as HTMLElement;
+  const statusFilter = document.getElementById('statusFilter') as HTMLSelectElement;
+
+  const sb = getSupabase();
+
+  function showLogin(msg = '') {
+    loginBox.hidden = false;
+    panelBox.hidden = true;
+    if (msg) { loginStatus.textContent = msg; loginStatus.style.color = '#ff7a90'; }
+  }
+
+  async function refresh() {
+    if (!sb) { showLogin(T().admin_nosb); return; }
+    const { data: { session } } = await sb.auth.getSession();
+    if (!session) { showLogin(); return; }
+    loginBox.hidden = true;
+    panelBox.hidden = false;
+    document.getElementById('adminEmail')!.textContent = session.user.email ?? '';
+    await loadApps();
+  }
+
+  async function loadApps() {
+    if (!sb) return;
+    const t = T();
+    panelStatus.textContent = t.admin_loading;
+    panelStatus.style.color = '#9ca3af';
+    const { data, error } = await sb.from('professional_applications')
+      .select('*').eq('status', statusFilter.value)
+      .order('created_at', { ascending: false }).limit(100);
+    if (error) {
+      panelStatus.textContent = t.admin_load_err + error.message;
+      panelStatus.style.color = '#ff7a90';
+      appList.innerHTML = '';
+      return;
+    }
+    panelStatus.textContent = `${data.length} ${t.admin_apps} — ${statusFilter.selectedOptions[0].text}`;
+    panelStatus.style.color = '#9ca3af';
+    appList.innerHTML = '';
+    if (data.length === 0) {
+      appList.innerHTML = `<div class="empty">${escapeHtml(t.admin_empty)}</div>`;
+      return;
+    }
+    for (const a of data) {
+      const card = document.createElement('article');
+      card.className = 'glass app-card';
+      const photo = a.photo_url || avatar(a.name);
+      const date = new Date(a.created_at).toLocaleString(LOCALES[lang()] || 'en-US');
+      card.innerHTML = `
+        <img src="${photo}" alt="" loading="lazy" />
+        <div class="app-info">
+          <h3>${escapeHtml(a.name)}</h3>
+          <div class="app-sub">${escapeHtml(profLabel(a.profession))} · ${escapeHtml(a.city || '—')} ${escapeHtml(a.zip_code || '')}</div>
+          <div class="app-sub">📞 ${escapeHtml(a.phone)} · ✉️ ${escapeHtml(a.email)}</div>
+          <div class="app-sub">${escapeHtml(t.admin_lic)}${escapeHtml(a.license || '—')} · ${escapeHtml(fmt(t.admin_exp, { n: a.years_experience ?? '—' }))}</div>
+          <p class="app-about">${escapeHtml(a.about || '')}</p>
+          <div class="app-sub dim">${date} · ${escapeHtml(t.admin_status)}: ${escapeHtml(a.status)}</div>
+          <div class="app-actions"></div>
+        </div>`;
+      const actions = card.querySelector('.app-actions') as HTMLElement;
+      if (a.status === 'pending') {
+        const ok = document.createElement('button');
+        ok.className = 'btn wa';
+        ok.type = 'button';
+        ok.textContent = t.admin_approve;
+        ok.onclick = () => approve(a);
+        const no = document.createElement('button');
+        no.className = 'btn danger';
+        no.type = 'button';
+        no.textContent = t.admin_reject;
+        no.onclick = () => reject(a);
+        actions.append(ok, no);
+      }
+      appList.appendChild(card);
+    }
+  }
+
+  function escapeHtml(s: string) {
+    return String(s ?? '').replace(/[&<>"']/g, (c) =>
+      ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]!));
+  }
+
+  async function approve(a: any) {
+    if (!sb) return;
+    const t = T();
+    if (!confirm(fmt(t.admin_confirm_approve, { name: a.name }))) return;
+    panelStatus.textContent = t.admin_approving;
+    const slug = `${slugify(a.name)}-${String(a.id).slice(0, 8)}`;
+    const row = {
+      slug,
+      name: a.name,
+      profession: a.profession,
+      city: a.city || '',
+      county: COUNTY[a.city] || 'Miami-Dade',
+      zip_codes: a.zip_code ? [a.zip_code] : [],
+      phone: a.phone,
+      phone_display: a.phone,
+      email: a.email,
+      photo: a.photo_url || avatar(a.name),
+      rating: 5.0,
+      reviews: 0,
+      years_experience: a.years_experience ?? 0,
+      license: a.license || '',
+      languages: ['EN'],
+      emergency_24h: false,
+      about: a.about || '',
+      is_active: true,
+    };
+    const { error: insErr } = await sb.from('professionals').insert(row);
+    if (insErr) {
+      panelStatus.textContent = t.admin_publish_err + insErr.message;
+      panelStatus.style.color = '#ff7a90';
+      return;
+    }
+    const { error: updErr } = await sb.from('professional_applications')
+      .update({ status: 'approved' }).eq('id', a.id);
+    panelStatus.textContent = updErr
+      ? t.admin_publish_partial + updErr.message
+      : fmt(t.admin_publish_ok, { name: a.name });
+    panelStatus.style.color = updErr ? '#ff7a90' : '#83f0a5';
+    await loadApps();
+  }
+
+  async function reject(a: any) {
+    if (!sb) return;
+    const t = T();
+    if (!confirm(fmt(t.admin_confirm_reject, { name: a.name }))) return;
+    const { error } = await sb.from('professional_applications')
+      .update({ status: 'rejected' }).eq('id', a.id);
+    panelStatus.textContent = error ? t.admin_err + error.message : fmt(t.admin_rejected_msg, { name: a.name });
+    panelStatus.style.color = error ? '#ff7a90' : '#83f0a5';
+    await loadApps();
+  }
+
+  document.getElementById('loginForm')?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    if (!sb) return;
+    const fd = new FormData(e.target as HTMLFormElement);
+    loginStatus.textContent = T().admin_entering;
+    loginStatus.style.color = '#9ca3af';
+    const { error } = await sb.auth.signInWithPassword({
+      email: String(fd.get('email')),
+      password: String(fd.get('password')),
+    });
+    if (error) {
+      loginStatus.textContent = T().admin_login_fail + error.message;
+      loginStatus.style.color = '#ff7a90';
+      return;
+    }
+    await refresh();
+  });
+
+  document.getElementById('logoutBtn')?.addEventListener('click', async () => {
+    await sb?.auth.signOut();
+    await refresh();
+  });
+
+  statusFilter.addEventListener('change', loadApps);
+  document.querySelectorAll('.lang-btn').forEach((b) => b.addEventListener('click', () => {
+    setTimeout(() => { if (!panelBox.hidden) loadApps(); }, 0);
+  }));
+  sb?.auth.onAuthStateChange(() => refresh());
+  refresh();
+</script>
+
+<style>
+  .box { max-width: 420px; margin: 0 auto; border: 1px solid var(--line); border-radius: 24px;
+    padding: 32px; background: #080a0d }
+  .box h3 { font-family: "Space Grotesk"; margin: 0 0 16px; font-size: 22px }
+  .form { display: grid; gap: 11px }
+  .field { background: #0a0c0f; border: 1px solid rgba(255,255,255,.12); border-radius: 12px;
+    padding: 12px 14px; color: #fff; outline: none; width: 100%; font-size: 13px }
+  .field:focus { border-color: rgba(255,255,255,.45) }
+  .field.slim { width: auto; padding: 9px 12px }
+  .form-status { font-size: 12px; min-height: 18px }
+  .toolbar { display: flex; gap: 10px; align-items: center; margin-bottom: 18px; flex-wrap: wrap }
+  .toolbar span { color: var(--muted); font-size: 12px; margin-right: auto }
+  .list { display: grid; gap: 14px }
+  .app-card { display: grid; grid-template-columns: 120px 1fr; gap: 18px; padding: 20px }
+  .app-card img { width: 120px; height: 120px; border-radius: 18px; object-fit: cover;
+    border: 1px solid rgba(255,255,255,.15) }
+  .app-info h3 { margin: 0 0 4px; font-family: "Space Grotesk"; font-size: 20px }
+  .app-sub { font-size: 12px; color: #cfd2d8; margin-bottom: 3px }
+  .app-sub.dim { color: #777e88 }
+  .app-about { font-size: 13px; color: var(--muted); line-height: 1.6 }
+  .app-actions { display: flex; gap: 8px; margin-top: 10px }
+  .btn.wa { background: #1faa55; border-color: #1faa55; color: #fff; font-weight: 700 }
+  .btn.danger { border-color: rgba(255,80,100,.5); color: #ff7a90 }
+  .empty { text-align: center; color: var(--muted); border: 1px dashed rgba(255,255,255,.2);
+    border-radius: 20px; padding: 40px }
+
+  @media (max-width: 640px) {
+    .app-card { grid-template-columns: 1fr }
+    .app-card img { width: 100%; height: 180px }
+  }
+</style>

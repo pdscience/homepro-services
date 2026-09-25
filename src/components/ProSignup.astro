@@ -1,0 +1,298 @@
+---
+import { PROFESSIONS } from '../data/professionals';
+
+const PROF_LABEL_EN: Record<string, string> = {
+  hvac: "HVAC",
+  plumbing: "Plumbing",
+  electrical: "Electrical",
+  roofing: "Roofing",
+  "impact-windows": "Impact Windows",
+  pools: "Pools",
+  "pest-control": "Pest Control",
+  generators: "Generators",
+  landscaping: "Landscaping",
+  "pressure-washing": "Pressure Washing",
+  handyman: "Handyman",
+  "home-cleaning": "Home Cleaning",
+};
+---
+<section class="section" id="join">
+  <div class="form-section reveal">
+    <div class="form-grid">
+      <div>
+        <div class="kicker" data-i18n="prosign_kicker">07 / For pros</div>
+        <h2 data-i18n="prosign_h1">Are you a pro?<br />Join us.</h2>
+        <p data-i18n="prosign_desc">Offer your services across Florida. Apply in 1 minute — we review every application and publish approved pros in our directory.</p>
+      </div>
+      <div class="forms-col">
+      <form class="form" id="proForm">
+        <div class="row2">
+          <label class="fld"><span data-i18n="prosign_name">Full name</span>
+            <input class="field" name="name" data-i18n-placeholder="prosign_name" placeholder="Full name" required /></label>
+          <label class="fld"><span data-i18n="prosign_prof">Profession</span>
+            <select class="field" name="profession" required>
+              <option value="" data-i18n="prosign_prof">Profession</option>
+              {PROFESSIONS.map((p) => <option value={p} data-pf-key={p}>{PROF_LABEL_EN[p]}</option>)}
+            </select></label>
+        </div>
+        <div class="row2">
+          <label class="fld"><span data-i18n="prosign_city">City</span>
+            <input class="field" name="city" data-i18n-placeholder="prosign_city" placeholder="City" /></label>
+          <label class="fld"><span data-i18n="prosign_zip">ZIP code</span>
+            <input class="field" name="zip_code" data-i18n-placeholder="prosign_zip" placeholder="ZIP code" inputmode="numeric" maxlength="5" /></label>
+        </div>
+        <div class="row2">
+          <label class="fld"><span data-i18n="prosign_phone">WhatsApp / phone</span>
+            <input class="field" name="phone" data-i18n-placeholder="prosign_phone" placeholder="WhatsApp / phone" required /></label>
+          <label class="fld"><span data-i18n="prosign_email">Email</span>
+            <input class="field" name="email" type="email" data-i18n-placeholder="prosign_email" placeholder="Email" required /></label>
+        </div>
+        <div class="row2">
+          <label class="fld"><span data-i18n="prosign_license">FL license number</span>
+            <input class="field" name="license" data-i18n-placeholder="prosign_license" placeholder="FL license number" /></label>
+          <label class="fld"><span data-i18n="prosign_years">Years of experience</span>
+            <input class="field" name="years_experience" type="number" min="0" max="60" data-i18n-placeholder="prosign_years" placeholder="Years of experience" /></label>
+        </div>
+        <label class="fld"><span data-i18n="prosign_about">Tell us about your work…</span>
+          <textarea class="field" name="about" data-i18n-placeholder="prosign_about" placeholder="Tell us about your work…"></textarea></label>
+        <label class="fld upload"><span data-i18n="prosign_photo">Professional photo (JPG/PNG, max 5MB)</span>
+          <input class="field" type="file" name="photo" accept="image/jpeg,image/png,image/webp" /></label>
+        <button class="btn primary cta" type="submit"><span data-i18n="prosign_btn">Apply now</span> &uarr;</button>
+        <div class="form-status" id="proStatus"></div>
+      </form>
+      <div class="tabs below" role="group" data-i18n-aria="ui_access" aria-label="Access mode">
+        <button type="button" class="tab active" data-tab="signup" aria-pressed="true" data-i18n="prosign_tab_new">New registration</button>
+        <button type="button" class="tab" data-tab="login" aria-pressed="false" data-i18n="prosign_tab_login">I already have an account</button>
+      </div>
+      <form class="form" id="proLoginForm" hidden>
+        <label class="fld"><span data-i18n="prosign_email">Email</span>
+          <input class="field" name="email" type="email" data-i18n-placeholder="prosign_email" placeholder="Email" required autocomplete="email" /></label>
+        <label class="fld"><span data-i18n="prosign_phone">WhatsApp / phone</span>
+          <input class="field" name="phone" data-phone-mask placeholder="+1 (305) 555-0101" required autocomplete="tel" inputmode="tel" /></label>
+        <button class="btn primary cta" type="submit"><span data-i18n="prosign_login_btn">Log in</span> &uarr;</button>
+        <div class="form-status" id="loginStatus"></div>
+      </form>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  import { getSupabase } from '../lib/supabase';
+
+  const MSG: Record<string, { sending: string; uploading: string; tooBig: string; ok: string; err: string; login_ok: string; login_nf: string; viewDir: string }> = {
+    en: { sending: "Sending application…", uploading: "Uploading photo…", tooBig: "Photo must be JPG/PNG/WebP up to 5MB.", ok: "Application received! We'll review it and contact you soon.", err: "Something went wrong. Please try again or contact us via WhatsApp.", login_ok: "Registration found! Your profile is live in the directory.", login_nf: "No registration found with this email + phone. Complete your signup above.", viewDir: "View directory" },
+    pt: { sending: "Enviando cadastro…", uploading: "Enviando foto…", tooBig: "A foto deve ser JPG/PNG/WebP de até 5MB.", ok: "Cadastro recebido! Vamos revisar e entrar em contato em breve.", err: "Algo deu errado. Tente de novo ou fale conosco via WhatsApp.", login_ok: "Cadastro encontrado! Seu perfil está ativo no diretório.", login_nf: "Não encontramos cadastro com este e-mail + telefone. Complete seu cadastro acima.", viewDir: "Ver diretório" },
+    es: { sending: "Enviando solicitud…", uploading: "Subiendo foto…", tooBig: "La foto debe ser JPG/PNG/WebP de hasta 5MB.", ok: "¡Solicitud recibida! La revisaremos y te contactaremos pronto.", err: "Algo salió mal. Intenta de nuevo o contáctanos por WhatsApp.", login_ok: "¡Registro encontrado! Tu perfil está activo en el directorio.", login_nf: "No encontramos registro con este correo + teléfono. Completa tu registro arriba.", viewDir: "Ver directorio" },
+  };
+
+  const PF: Record<string, Record<string, string>> = {
+    en: { hvac: "HVAC", plumbing: "Plumbing", electrical: "Electrical", roofing: "Roofing", "impact-windows": "Impact Windows", pools: "Pools", "pest-control": "Pest Control", generators: "Generators", landscaping: "Landscaping", "pressure-washing": "Pressure Washing", handyman: "Handyman", "home-cleaning": "Home Cleaning" },
+    pt: { hvac: "HVAC", plumbing: "Encanamento", electrical: "Elétrica", roofing: "Telhados", "impact-windows": "Janelas de Impacto", pools: "Piscinas", "pest-control": "Controle de Pragas", generators: "Geradores", landscaping: "Jardinagem", "pressure-washing": "Lavagem a Pressão", handyman: "Faz-tudo", "home-cleaning": "Limpeza Residencial" },
+    es: { hvac: "HVAC", plumbing: "Plomería", electrical: "Electricidad", roofing: "Techos", "impact-windows": "Ventanas de Impacto", pools: "Piscinas", "pest-control": "Control de Plagas", generators: "Generadores", landscaping: "Jardinería", "pressure-washing": "Lavado a Presión", handyman: "Manitas", "home-cleaning": "Limpieza del Hogar" },
+  };
+
+  const lang = () => localStorage.getItem('homepro_lang') || 'en';
+
+  // US phone mask with DDD: +1 (305) 555-0101
+  function formatUSPhone(value: string) {
+    let d = value.replace(/\D/g, '');
+    if (d.length > 10 && d.startsWith('1')) d = d.slice(1);
+    d = d.slice(0, 10);
+    if (d.length === 0) return '';
+    let out = '+1 ';
+    out += '(' + d.slice(0, 3);
+    if (d.length >= 3) out += ') ';
+    if (d.length > 3) out += d.slice(3, 6);
+    if (d.length > 6) out += '-' + d.slice(6, 10);
+    return out;
+  }
+
+  function normalizePhone(value: string) {
+    const d = value.replace(/\D/g, '');
+    if (d.length === 11 && d.startsWith('1')) return { phone: d, display: formatUSPhone(d) };
+    if (d.length === 10) return { phone: '1' + d, display: formatUSPhone(d) };
+    const v = value.trim();
+    return { phone: v, display: v };
+  }
+
+  document.querySelectorAll('#join [data-phone-mask], #proForm input[name="phone"]').forEach((el) => {
+    const input = el as HTMLInputElement;
+    input.addEventListener('input', () => {
+      if (input.value.replace(/\D/g, '') === '') { input.value = ''; return; }
+      input.value = formatUSPhone(input.value);
+    });
+  });
+
+  function escapeHtml(s: string) {
+    return String(s ?? '').replace(/[&<>"']/g, (c) =>
+      ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]!));
+  }
+
+  // Tabs: signup <-> login
+  const proForm = document.getElementById('proForm') as HTMLFormElement;
+  const proLoginForm = document.getElementById('proLoginForm') as HTMLFormElement;
+  document.querySelectorAll('#join .tab').forEach((tab) => {
+    tab.addEventListener('click', () => {
+      document.querySelectorAll('#join .tab').forEach((t) => {
+        t.classList.remove('active');
+        t.setAttribute('aria-pressed', 'false');
+      });
+      tab.classList.add('active');
+      tab.setAttribute('aria-pressed', 'true');
+      const mode = tab.getAttribute('data-tab');
+      proForm.hidden = mode !== 'signup';
+      proLoginForm.hidden = mode !== 'login';
+    });
+  });
+
+  // Login: find the professional in the public directory by email + phone
+  proLoginForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const m = MSG[lang()] || MSG.en;
+    const status = document.getElementById('loginStatus') as HTMLElement;
+    status.textContent = m.sending;
+    status.style.color = '#9ca3af';
+    const fd = new FormData(proLoginForm);
+    const email = String(fd.get('email') || '').trim().toLowerCase();
+    const digits = String(fd.get('phone') || '').replace(/\D/g, '').replace(/^1/, '');
+    const sb = getSupabase();
+    if (!sb) {
+      status.textContent = m.err;
+      status.style.color = '#ff7a90';
+      return;
+    }
+    const { data, error } = await sb.from('professionals')
+      .select('name,profession,city,phone').eq('email', String(fd.get('email') || '').trim());
+    const match = !error && (data || []).find((p: any) =>
+      String(p.phone || '').replace(/\D/g, '').replace(/^1/, '') === digits && digits.length > 0);
+    if (match) {
+      status.innerHTML = `✅ <b>${escapeHtml(match.name)}</b> — ${m.login_ok} <a href="/profissionais" style="color:#fff;text-decoration:underline">${m.viewDir} &uarr;</a>`;
+      status.style.color = '#83f0a5';
+      try { localStorage.setItem('homepro_pro', email); } catch {}
+    } else {
+      status.textContent = error ? m.err : m.login_nf;
+      status.style.color = error ? '#ff7a90' : '#9ca3af';
+    }
+  });
+
+  function translateProfessions() {
+    const t = PF[lang()] || PF.en;
+    document.querySelectorAll('#proForm [data-pf-key]').forEach((el) => {
+      const k = el.getAttribute('data-pf-key');
+      if (k && t[k]) el.textContent = t[k];
+    });
+  }
+
+  document.querySelectorAll('.lang-btn').forEach((b) =>
+    b.addEventListener('click', () => setTimeout(translateProfessions, 0)));
+  translateProfessions();
+
+  document.getElementById('proForm')?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const form = e.target as HTMLFormElement;
+    const status = document.getElementById('proStatus');
+    const m = MSG[lang()] || MSG.en;
+    if (status) { status.textContent = m.sending; status.style.color = '#9ca3af'; }
+
+    const fd = new FormData(form);
+    const years = parseInt(String(fd.get('years_experience') || ''), 10);
+    const ph = normalizePhone(String(fd.get('phone') || ''));
+
+    const sb = getSupabase();
+    if (!sb) {
+      if (status) { status.textContent = m.err; status.style.color = '#ff7a90'; }
+      return;
+    }
+
+    // Optional photo upload to public bucket before saving the application
+    let photo_url: string | null = null;
+    const fileInput = form.querySelector('input[name="photo"]') as HTMLInputElement | null;
+    const file = fileInput?.files?.[0];
+    if (file) {
+      const validType = ['image/jpeg', 'image/png', 'image/webp'].includes(file.type);
+      if (!validType || file.size > 5 * 1024 * 1024) {
+        if (status) { status.textContent = m.tooBig; status.style.color = '#ff7a90'; }
+        return;
+      }
+      if (status) { status.textContent = m.uploading; status.style.color = '#9ca3af'; }
+      const safeName = file.name.replace(/[^a-zA-Z0-9.\-_]/g, '_');
+      const path = `applications/${Date.now()}-${safeName}`;
+      const { error: upErr } = await sb.storage
+        .from('professional-photos')
+        .upload(path, file, { contentType: file.type, upsert: false });
+      if (upErr) {
+        if (status) { status.textContent = m.err; status.style.color = '#ff7a90'; }
+        return;
+      }
+      photo_url = sb.storage.from('professional-photos').getPublicUrl(path).data.publicUrl;
+    }
+
+    const payload = {
+      name: String(fd.get('name') || '').trim(),
+      profession: String(fd.get('profession') || ''),
+      city: String(fd.get('city') || '').trim(),
+      zip_code: String(fd.get('zip_code') || '').trim(),
+      phone: ph.phone,
+      email: String(fd.get('email') || '').trim(),
+      license: String(fd.get('license') || '').trim(),
+      years_experience: Number.isNaN(years) ? null : years,
+      about: String(fd.get('about') || '').trim(),
+      photo_url,
+    };
+
+    if (status) { status.textContent = m.sending; status.style.color = '#9ca3af'; }
+    const { error } = await sb.from('professional_applications').insert(payload);
+    if (status) {
+      status.textContent = error ? m.err : m.ok;
+      status.style.color = error ? '#ff7a90' : '#83f0a5';
+    }
+    if (!error) form.reset();
+  });
+</script>
+
+<style>
+  .form-section { position: relative; overflow: hidden; border: 1px solid var(--line); border-radius: 30px; background: linear-gradient(145deg,#0c0e12,#07080a); padding: 50px }
+  .form-section:after { content: ""; position: absolute; width: 450px; height: 450px; right: -180px; top: -180px; background: var(--red); filter: blur(130px); opacity: .12 }
+  .form-grid { display: grid; grid-template-columns: .8fr 1.2fr; gap: 60px; position: relative; z-index: 2 }
+  .form-section h2 { font-size: clamp(40px,5vw,68px) }
+  .form-section p { color: var(--muted); line-height: 1.7; font-size: 13px }
+  .form { display: grid; gap: 11px }
+  .forms-col { min-width: 0 }
+  .tabs { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 14px }
+  .tab { background: linear-gradient(135deg,var(--red2),var(--red)); border: none; border-radius: 999px;
+    padding: 5px 10px; color: #fff; cursor: pointer; font-size: 11px; font-weight: 700; line-height: 1.2; transition: .25s;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis; opacity: .5 }
+  .tab.active { opacity: 1; box-shadow: 0 8px 22px rgba(227,6,47,.35) }
+  .tabs.below { margin-bottom: 0; margin-top: 18px; width: 100% }
+  #proLoginForm { width: 100%; margin-top: 14px }
+  .row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px }
+  .fld { display: grid; gap: 6px; align-content: start }
+  .fld > span { font-size: 10px; text-transform: uppercase; letter-spacing: .16em; color: #8b9098 }
+  .field { background: #0b0d11; border: 1px solid rgba(255,255,255,.12); border-radius: 14px;
+    padding: 13px 15px; color: #fff; outline: none; width: 100%; font-size: 14px;
+    transition: border-color .25s, box-shadow .25s }
+  .field::placeholder { color: #565c66 }
+  .field:hover { border-color: rgba(255,255,255,.22) }
+  .field:focus { border-color: rgba(227,6,47,.7); box-shadow: 0 0 0 4px rgba(227,6,47,.12) }
+  select.field { appearance: none; -webkit-appearance: none; cursor: pointer; padding-right: 38px;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%239ca3af' stroke-width='2' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat; background-position: right 15px center }
+  select.field option { background: #0a0c0f }
+  textarea.field { min-height: 100px; resize: vertical; line-height: 1.6 }
+  .upload .field { border-style: dashed; border-color: rgba(255,255,255,.22); cursor: pointer; font-size: 13px; color: #9ca3af }
+  .upload .field:hover { border-color: rgba(227,6,47,.6) }
+  .upload input[type="file"]::file-selector-button { background: rgba(227,6,47,.15); color: #ffb3c1;
+    border: 1px solid rgba(227,6,47,.4); border-radius: 10px; padding: 8px 14px; margin-right: 12px; cursor: pointer; font-size: 12px }
+  #join .btn.cta { width: 100%; padding: 12px; font-size: 13px; font-weight: 700;
+    background: linear-gradient(135deg,var(--red2),var(--red)); border: none; color: #fff }
+  #join .btn.cta:hover { transform: translateY(-2px); box-shadow: 0 14px 34px rgba(227,6,47,.35);
+    background: linear-gradient(135deg,var(--red2),var(--red)) }
+  .form-status { font-size: 12px; min-height: 18px }
+
+  @media (max-width: 850px) {
+    .form-grid { grid-template-columns: 1fr }
+    .form-section { padding: 30px }
+    .row2 { grid-template-columns: 1fr }
+  }
+</style>
